@@ -8,6 +8,18 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "paths": {
+            "@x402-ups/sdk": [
+                "./packages/sdk/src/index.ts"
+            ],
+            "@x402-ups/react": [
+                "./packages/react/src/index.ts"
+            ],
+            "@x402-ups/test-utils": [
+                "./packages/test-utils/src/index.ts"
+            ]
+        }
     }
 }
