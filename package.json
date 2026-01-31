@@ -11,6 +11,7 @@
     "generate:types": "openapi-typescript api/swagger.yaml -o api/generated/api-types.ts",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "pnpm --filter @x402-ups/sdk test:e2e",
     "lint": "eslint .",
     "typecheck": "pnpm -r typecheck",
     "clean": "rm -rf node_modules packages/*/dist packages/*/node_modules",
