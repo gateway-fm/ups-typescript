@@ -22,7 +22,7 @@ describe('AccountModule', () => {
 
     it('should predict address before deployment', async () => {
         const result = await accountModule.predictAddress({ ownerAddress: '0xowner', salt: '0xsalt' });
-        expect(result).toBe('0xpredictedaddress...');
+        expect(result).toBe('0x1234567890123456789012345678901234567890');
     });
 
     it('should get account by ID', async () => {

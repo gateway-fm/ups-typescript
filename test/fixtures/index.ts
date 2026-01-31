@@ -4,7 +4,6 @@ export const mockAccount: Account = {
     id: 'acc_123',
     ownerAddress: '0x1234567890123456789012345678901234567890',
     walletAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
-    accountType: 'USER',
     status: 'active',
     kycLevel: 0,
     userId: 'mock-user-id',

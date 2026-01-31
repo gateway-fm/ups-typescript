@@ -38,7 +38,7 @@ describe('PaymentModule', () => {
     it('should settle payment', async () => {
         const result = await paymentModule.settle(mockSignedAuth, mockPaymentRequirements);
         expect(result.success).toBe(true);
-        expect(result.txHash).toBe('0xmocktxhash...');
+        expect(result.transaction).toBe('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef');
     });
 
     it('should execute full pay() flow', async () => {

@@ -86,14 +86,14 @@ describe('B2C Payment Flow', () => {
 
         // 8. Verify result
         expect(result.success).toBe(true);
-        expect(result.txHash).toBeDefined();
-        expect(result.txHash).toMatch(/^0x[a-fA-F0-9]{64}$/);
+        expect(result.transaction).toBeDefined();
+        expect(result.transaction).toMatch(/^0x[a-fA-F0-9]{64}$/);
 
-        console.log('Payment TX Hash:', result.txHash);
+        console.log('Payment TX Hash:', result.transaction);
 
         // 9. Wait for confirmation
-        if (result.txHash) {
-            await waitForTx(result.txHash);
+        if (result.transaction) {
+            await waitForTx(result.transaction);
         }
 
         // 10. Verify final balances

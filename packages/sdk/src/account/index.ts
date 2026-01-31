@@ -54,7 +54,6 @@ export class AccountModule {
             id: data.id,
             ownerAddress: data.owner_address,
             walletAddress: data.wallet_address,
-            accountType: data.account_type || 'USER', // Default to USER if not provided
             status: data.status,
             kycLevel: data.kyc_level ?? 0,
             userId: data.user_id,

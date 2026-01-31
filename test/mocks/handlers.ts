@@ -69,20 +69,19 @@ export const handlers = [
                 id: mockAccount.id,
                 owner_address: mockAccount.ownerAddress,
                 wallet_address: mockAccount.walletAddress,
-                account_type: mockAccount.accountType,
                 status: mockAccount.status,
                 kyc_level: mockAccount.kycLevel,
                 user_id: 'mock-user-id',
                 created_at: mockAccount.createdAt,
                 updated_at: mockAccount.updatedAt,
             },
-            tx_hash: '0xmocktxhash...'
+            tx_hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
         });
     }),
 
     http.post('*/accounts/predict', () => {
         return HttpResponse.json({
-            wallet_address: '0xpredictedaddress...'
+            wallet_address: '0x1234567890123456789012345678901234567890'
         });
     }),
 
@@ -92,7 +91,6 @@ export const handlers = [
                 id: mockAccount.id,
                 owner_address: mockAccount.ownerAddress,
                 wallet_address: mockAccount.walletAddress,
-                account_type: mockAccount.accountType,
                 status: mockAccount.status,
                 kyc_level: mockAccount.kycLevel,
                 user_id: 'mock-user-id',
@@ -109,7 +107,6 @@ export const handlers = [
                 id,
                 owner_address: mockAccount.ownerAddress,
                 wallet_address: mockAccount.walletAddress,
-                account_type: mockAccount.accountType,
                 status: mockAccount.status,
                 kyc_level: mockAccount.kycLevel,
                 user_id: 'mock-user-id',
@@ -123,15 +120,16 @@ export const handlers = [
     http.post('*/x402/verify', () => {
         return HttpResponse.json({
             isValid: true,
-            invalidReason: undefined,
+            payer: '0xmockpayer...',
         });
     }),
 
     http.post('*/x402/settle', () => {
         return HttpResponse.json({
             success: true,
-            txHash: '0xmocktxhash...',
-            networkId: 'eip155:84532',
+            transaction: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+            network: 'eip155:84532',
+            payer: '0xmockpayer...',
         });
     }),
 
@@ -141,6 +139,8 @@ export const handlers = [
                 { x402Version: 1, scheme: 'exact', network: 'eip155:84532' },
                 { x402Version: 1, scheme: 'exact', network: 'eip155:8453' },
             ],
+            extensions: [],
+            signers: {},
         });
     }),
 

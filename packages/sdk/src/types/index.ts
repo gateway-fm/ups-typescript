@@ -58,13 +58,11 @@ export interface ConnectedWallet {
 
 // Account
 export type AccountStatus = 'pending' | 'kyc_in_progress' | 'active' | 'frozen' | 'closed';
-export type AccountType = 'USER' | 'CARD';
 
 export interface Account {
     id: string;
     ownerAddress: string;
     walletAddress: string;
-    accountType: AccountType;
     status: AccountStatus;
     kycLevel: number;
     userId?: string;
@@ -112,13 +110,15 @@ export interface SignedAuthorization extends PaymentAuthorization {
 export interface VerifyResponse {
     isValid: boolean;
     invalidReason?: string;
+    payer?: string;
 }
 
 export interface SettleResponse {
     success: boolean;
-    error?: string;
-    txHash?: string;
-    networkId?: string;
+    errorReason?: string;
+    transaction?: string;
+    network?: string;
+    payer?: string;
 }
 
 // x402 Supported Schemes
@@ -130,6 +130,8 @@ export interface SupportedScheme {
 
 export interface SupportedSchemesResponse {
     kinds: SupportedScheme[];
+    extensions?: string[];
+    signers?: Record<string, string[]>;
 }
 
 // EIP-712 Typed Data

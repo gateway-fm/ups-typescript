@@ -14,7 +14,7 @@ export function PaymentForm() {
     const [recipient, setRecipient] = useState('');
     const [amount, setAmount] = useState('1'); // Human-readable amount (e.g., "1.5")
 
-    // Track the last txHash we've seen to trigger balance refresh
+    // Track the last transaction hash we've seen to trigger balance refresh
     const lastTxHashRef = useRef<string | null>(null);
 
     // Get balance for selected account
@@ -29,14 +29,14 @@ export function PaymentForm() {
 
     // Refresh balances after successful payment - using shared context
     useEffect(() => {
-        if (data?.txHash && data.txHash !== lastTxHashRef.current) {
+        if (data?.transaction && data.transaction !== lastTxHashRef.current) {
             console.log('[PaymentForm] Payment success detected, triggering shared balance refresh');
-            lastTxHashRef.current = data.txHash;
+            lastTxHashRef.current = data.transaction;
 
             // Use the shared context to trigger refresh for ALL components
             triggerRefresh();
         }
-    }, [data?.txHash, triggerRefresh]);
+    }, [data?.transaction, triggerRefresh]);
 
     // Convert human-readable amount to atomic units
     const getAtomicAmount = (): string => {
@@ -102,7 +102,7 @@ export function PaymentForm() {
         return <div className="card"><p>No smart accounts found. Create one first.</p></div>;
     }
 
-    if (data?.txHash) {
+    if (data?.transaction) {
         return (
             <div className="card">
                 <h3 style={{ color: '#22c55e' }}>✓ Payment Successful!</h3>
@@ -110,7 +110,7 @@ export function PaymentForm() {
                     <p style={{ margin: '8px 0' }}><strong>Amount:</strong> {amount} {symbol}</p>
                     <p style={{ margin: '8px 0' }}><strong>To:</strong> {recipient.slice(0, 10)}...{recipient.slice(-8)}</p>
                     <p style={{ margin: '8px 0', wordBreak: 'break-all' }}>
-                        <strong>TX Hash:</strong> <code style={{ fontSize: '12px' }}>{data.txHash}</code>
+                        <strong>TX Hash:</strong> <code style={{ fontSize: '12px' }}>{data.transaction}</code>
                     </p>
                     {selectedAccount && (
                         <p style={{ margin: '8px 0' }}>
