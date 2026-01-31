@@ -394,7 +394,7 @@ import { UPSClient } from '@x402-ups/sdk';
 import { createWalletClient, http } from 'viem';
 
 const client = new UPSClient({ baseUrl: '...', network: 'eip155:84532' });
-// Connect, authenticate, create account, make payment
+// Connect, authenticate, create accounts (buyer/merchant), fund buyer, make payment
 ```
 
 ### React Example (`examples/react-app/`)

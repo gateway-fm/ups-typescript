@@ -15,7 +15,7 @@ export function createMockProvider(account: LocalAccount): EIP1193Provider {
                     if (address.toLowerCase() !== account.address.toLowerCase()) {
                         throw new Error('Address mismatch');
                     }
-                    return account.signMessage({ message });
+                    return account.signMessage({ message: { raw: message as `0x${string}` } });
                 }
                 case 'eth_signTypedData_v4': {
                     const [addr, data] = params as [string, string];
