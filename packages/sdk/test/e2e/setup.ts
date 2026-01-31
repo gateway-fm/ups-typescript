@@ -13,7 +13,7 @@ if (fs.existsSync(localEnvPath)) {
 }
 
 // Ensure private key has 0x prefix
-let privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY;
+let privateKey = process.env.BLOCKCHAIN_PRIVATE_KEY || process.env.TEST_PRIVATE_KEY;
 if (privateKey && !privateKey.startsWith('0x')) {
     privateKey = `0x${privateKey}`;
 }
