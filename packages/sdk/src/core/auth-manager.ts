@@ -1,6 +1,6 @@
 import { HttpClient } from './http-client';
 import { EventBus } from './event-bus';
-import { AuthState, AuthResult } from '../types';
+import { AuthState, AuthResult, ConnectResult, User } from '../types';
 
 export class AuthManager {
     private _state: AuthState = {
@@ -10,50 +10,74 @@ export class AuthManager {
         address: null,
     };
     private refreshTimer: NodeJS.Timeout | null = null;
+    private refreshInterval: number;
 
     constructor(
         private http: HttpClient,
-        private eventBus: EventBus
-    ) { }
+        private eventBus: EventBus,
+        refreshInterval: number = 60000 // Default 1 minute
+    ) {
+        this.refreshInterval = refreshInterval;
+    }
 
     get state(): AuthState {
         return { ...this._state };
     }
 
-    async login(walletAddress: string, message: string, signature: string): Promise<AuthResult> {
-        const result = await this.http.post<AuthResult>('/auth/login', {
+    /**
+     * Unified connect method - creates user if new, authenticates if existing
+     * This is the preferred authentication method.
+     */
+    async connect(walletAddress: string, message: string, signature: string): Promise<ConnectResult> {
+        const result = await this.http.post<any>('/auth/connect', {
             wallet_address: walletAddress,
             message,
             signature,
         }, { skipAuth: true });
 
-        this.handleAuthSuccess(result, walletAddress);
-        return result;
+        const connectResult: ConnectResult = {
+            user: this.mapUser(result.user),
+            token: result.token,
+            expiresAt: result.expires_at,
+            isNewUser: result.is_new_user ?? false,
+        };
+
+        this.handleAuthSuccess({ token: result.token, expiresAt: result.expires_at }, walletAddress);
+        return connectResult;
     }
 
-    async register(walletAddress: string, message: string, signature: string): Promise<AuthResult> {
-        // Register returns { user, token, ... }
-        // We need to map it to AuthResult or just extract token/expiresAt?
-        // test_auth.py says register returns { user: {...}, token: "..." }
-        // Does it return expiresAt?
-        // Let's assume standard AuthResult structure for simplicity or inspect response if needed.
-        // If register returns different shape, we might need adapter.
-        // But for now let's hope it returns token/expiresAt.
-        // If not, we might need to fetch profile or similar? 
-        // test_auth.py just checks for "token".
-        // Let's assume it returns { token, expiresAt, ... } like login.
+    /**
+     * @deprecated Use connect() instead
+     */
+    async login(walletAddress: string, message: string, signature: string): Promise<AuthResult> {
+        const result = await this.http.post<any>('/auth/login', {
+            wallet_address: walletAddress,
+            message,
+            signature,
+        }, { skipAuth: true });
 
+        const authResult: AuthResult = {
+            token: result.token,
+            expiresAt: result.expires_at || result.expiresAt,
+        };
+
+        this.handleAuthSuccess(authResult, walletAddress);
+        return authResult;
+    }
+
+    /**
+     * @deprecated Use connect() instead
+     */
+    async register(walletAddress: string, message: string, signature: string): Promise<AuthResult> {
         const result = await this.http.post<any>('/auth/register', {
             wallet_address: walletAddress,
             message,
             signature,
         }, { skipAuth: true });
 
-        // Map response if necessary. Assuming result has token.
-        // If expiresAt is missing, we might default it?
         const authResult: AuthResult = {
             token: result.token,
-            expiresAt: result.expiresAt || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Default 24h
+            expiresAt: result.expires_at || result.expiresAt || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         };
 
         this.handleAuthSuccess(authResult, walletAddress);
@@ -74,12 +98,12 @@ export class AuthManager {
         if (!this._state.token) return;
 
         try {
-            const result = await this.http.post<AuthResult>('/auth/refresh');
+            const result = await this.http.post<{ token: string; expires_at: string }>('/auth/refresh');
 
             this.updateState({
                 ...this._state,
                 token: result.token,
-                expiresAt: new Date(result.expiresAt),
+                expiresAt: new Date(result.expires_at),
             });
 
             this.scheduleRefresh();
@@ -87,6 +111,15 @@ export class AuthManager {
             console.error('Token refresh failed:', error);
             this.logout();
         }
+    }
+
+    private mapUser(data: any): User {
+        return {
+            id: data.id,
+            walletAddress: data.wallet_address,
+            status: data.status,
+            createdAt: data.created_at,
+        };
     }
 
     logout(): void {
@@ -129,15 +162,19 @@ export class AuthManager {
 
         const expiresAt = this._state.expiresAt.getTime();
         const now = Date.now();
-        // Refresh 5 minutes before expiry
-        const refreshTime = expiresAt - now - (5 * 60 * 1000);
+
+        // If token is already expired, don't schedule refresh
+        if (expiresAt <= now) {
+            return;
+        }
+
+        // Schedule refresh at the configured interval (e.g., 1 hour)
+        // But ensure we refresh before the token expires
+        const timeUntilExpiry = expiresAt - now;
+        const refreshTime = Math.min(this.refreshInterval, timeUntilExpiry - 60000); // At least 1 min buffer
 
         if (refreshTime > 0) {
             this.refreshTimer = setTimeout(() => this.refresh(), refreshTime);
-        } else {
-            // If already expired or close to it, try refresh immediately? 
-            // Or maybe it's too late. Let's try refresh immediately if we still think we are authenticated
-            this.refresh();
         }
     }
 }

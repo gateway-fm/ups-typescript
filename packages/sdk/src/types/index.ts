@@ -4,6 +4,7 @@ export interface UPSConfig {
     chainId?: number;          // Optional, parsed from network if not provided
     timeout?: number;          // Request timeout (default: 30000)
     retryAttempts?: number;    // Retry count (default: 3)
+    refreshInterval?: number;  // Token refresh interval in ms (default: 60000 = 1 min)
 }
 
 // Authentication
@@ -17,6 +18,22 @@ export interface AuthState {
 export interface AuthResult {
     token: string;
     expiresAt: string;
+}
+
+// User (from /auth/connect and /users/me)
+export interface User {
+    id: string;
+    walletAddress: string;
+    status: string;
+    createdAt: string;
+}
+
+// Connect auth result (unified auth flow)
+export interface ConnectResult {
+    user: User;
+    token: string;
+    expiresAt: string;
+    isNewUser: boolean;
 }
 
 // Wallet
@@ -50,8 +67,9 @@ export interface Account {
     accountType: AccountType;
     status: AccountStatus;
     kycLevel: number;
+    userId?: string;
     createdAt: string;
-    updatedAt: string;
+    updatedAt?: string;
 }
 
 export interface CreateAccountParams {
@@ -72,6 +90,8 @@ export interface PaymentRequirements {
     asset: string;
     payTo: string;
     maxTimeoutSeconds: number;
+    resource?: string;
+    description?: string;
     extra?: { name?: string; version?: string };
     from?: string;
 }
@@ -101,6 +121,17 @@ export interface SettleResponse {
     networkId?: string;
 }
 
+// x402 Supported Schemes
+export interface SupportedScheme {
+    x402Version: number;
+    scheme: string;
+    network: string;
+}
+
+export interface SupportedSchemesResponse {
+    kinds: SupportedScheme[];
+}
+
 // EIP-712 Typed Data
 export interface EIP712Domain {
     name: string;
@@ -120,3 +151,4 @@ export interface EIP712TypedData {
     primaryType: string;
     message: Record<string, unknown>;
 }
+

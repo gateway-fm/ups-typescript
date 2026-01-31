@@ -23,29 +23,39 @@ describe('AuthManager', () => {
         expect(authManager.getToken()).toBeNull();
     });
 
-    it('should authenticate with valid credentials', async () => {
-        const result = await authManager.authenticate('0xwallet', 'message', 'signature');
+    it('should connect with valid credentials (unified auth)', async () => {
+        const result = await authManager.connect('0xwallet', 'message', 'signature');
         expect(result).toBeDefined();
+        expect(result.token).toBe('mock-jwt-token');
+        expect(result.user).toBeDefined();
         expect(authManager.isAuthenticated()).toBe(true);
         expect(authManager.getToken()).toBe('mock-jwt-token');
     });
 
-    it('should emit auth:changed event on authentication', async () => {
+    it('should login with valid credentials (legacy)', async () => {
+        const result = await authManager.login('0xwallet', 'message', 'signature');
+        expect(result).toBeDefined();
+        expect(result.token).toBe('mock-jwt-token');
+        expect(authManager.isAuthenticated()).toBe(true);
+        expect(authManager.getToken()).toBe('mock-jwt-token');
+    });
+
+    it('should emit auth:changed event on connect', async () => {
         const spy = vi.fn();
         eventBus.on('auth:changed', spy);
-        await authManager.authenticate('0xwallet', 'message', 'signature');
+        await authManager.connect('0xwallet', 'message', 'signature');
         expect(spy).toHaveBeenCalledWith(expect.objectContaining({ isAuthenticated: true }));
     });
 
     it('should logout and clear state', async () => {
-        await authManager.authenticate('0xwallet', 'message', 'signature');
+        await authManager.connect('0xwallet', 'message', 'signature');
         authManager.logout();
         expect(authManager.isAuthenticated()).toBe(false);
         expect(authManager.getToken()).toBeNull();
     });
 
     it('should emit auth:changed event on logout', async () => {
-        await authManager.authenticate('0xwallet', 'message', 'signature');
+        await authManager.connect('0xwallet', 'message', 'signature');
         const spy = vi.fn();
         eventBus.on('auth:changed', spy);
         authManager.logout();

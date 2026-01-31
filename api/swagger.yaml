@@ -1,0 +1,637 @@
+openapi: 3.0.3
+info:
+  title: x402 UPS API
+  version: 1.0.0
+  description: x402 Universal Payments SDK API
+
+servers:
+  - url: /api/v1
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Health
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    # Auth
+    RegisterRequest:
+      type: object
+      required:
+        - wallet_address
+        - signature
+        - message
+      properties:
+        wallet_address:
+          type: string
+          description: "0x-prefixed Ethereum address"
+        signature:
+          type: string
+          description: "0x-prefixed EIP-191 signature"
+        message:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - wallet_address
+        - signature
+        - message
+      properties:
+        wallet_address:
+          type: string
+        signature:
+          type: string
+        message:
+          type: string
+
+    ConnectRequest:
+      type: object
+      required:
+        - wallet_address
+        - signature
+        - message
+      properties:
+        wallet_address:
+          type: string
+          description: "0x-prefixed Ethereum address"
+        signature:
+          type: string
+          description: "0x-prefixed EIP-191 signature"
+        message:
+          type: string
+
+    ConnectResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        is_new_user:
+          type: boolean
+          description: "True if a new user was created, false if existing user was authenticated"
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+
+    RefreshResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: "New JWT token"
+        expires_at:
+          type: string
+          format: date-time
+          description: "Token expiration time"
+
+    # User
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        wallet_address:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    UserResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+
+    # Account
+    CreateAccountRequest:
+      type: object
+      required:
+        - owner_address
+        - salt
+      properties:
+        owner_address:
+          type: string
+          description: "0x-prefixed EOA address"
+        salt:
+          type: string
+          description: "0x-prefixed 32-byte salt"
+
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_address:
+          type: string
+        wallet_address:
+          type: string
+        status:
+          type: string
+        kyc_level:
+          type: integer
+        user_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+
+    AccountResponse:
+      type: object
+      properties:
+        account:
+          $ref: "#/components/schemas/Account"
+        tx_hash:
+          type: string
+
+    AccountListResponse:
+      type: object
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Account"
+
+    PredictAddressRequest:
+      type: object
+      required:
+        - owner_address
+        - salt
+      properties:
+        owner_address:
+          type: string
+        salt:
+          type: string
+
+    PredictAddressResponse:
+      type: object
+      properties:
+        wallet_address:
+          type: string
+
+    # x402
+    PaymentRequirements:
+      type: object
+      properties:
+        scheme:
+          type: string
+        network:
+          type: string
+        maxAmountRequired:
+          type: string
+        resource:
+          type: string
+        description:
+          type: string
+        payTo:
+          type: string
+        maxTimeoutSeconds:
+          type: integer
+        asset:
+          type: string
+        extra:
+          type: object
+
+    X402VerifyRequest:
+      type: object
+      required:
+        - x402Version
+        - paymentHeader
+        - paymentRequirements
+      properties:
+        x402Version:
+          type: integer
+        paymentHeader:
+          type: string
+        paymentRequirements:
+          $ref: "#/components/schemas/PaymentRequirements"
+
+    X402VerifyResponse:
+      type: object
+      properties:
+        isValid:
+          type: boolean
+        invalidReason:
+          type: string
+
+    X402SettleRequest:
+      type: object
+      required:
+        - x402Version
+        - paymentHeader
+        - paymentRequirements
+      properties:
+        x402Version:
+          type: integer
+        paymentHeader:
+          type: string
+        paymentRequirements:
+          $ref: "#/components/schemas/PaymentRequirements"
+
+    X402SettleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        txHash:
+          type: string
+        networkId:
+          type: string
+
+    X402SupportedScheme:
+      type: object
+      properties:
+        x402Version:
+          type: integer
+        scheme:
+          type: string
+        network:
+          type: string
+
+    X402SupportedResponse:
+      type: object
+      properties:
+        kinds:
+          type: array
+          items:
+            $ref: "#/components/schemas/X402SupportedScheme"
+
+    # Errors
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+paths:
+  # Health
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      tags:
+        - Health
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  # Auth
+  /auth/connect:
+    post:
+      summary: Connect (unified auth) - creates user if new, authenticates if existing
+      operationId: connectUser
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConnectRequest"
+      responses:
+        "200":
+          description: Existing user authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConnectResponse"
+        "201":
+          description: New user created and authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConnectResponse"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/refresh:
+    post:
+      summary: Refresh session token
+      description: Returns a new session token with extended expiry. Requires valid existing token.
+      operationId: refreshToken
+      tags:
+        - Auth
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefreshResponse"
+        "401":
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/register:
+    post:
+      summary: Register new user with wallet (deprecated - use /auth/connect)
+      operationId: registerUser
+      deprecated: true
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: User registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/login:
+    post:
+      summary: Authenticate with wallet signature (deprecated - use /auth/connect)
+      operationId: loginUser
+      deprecated: true
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # Users
+  /users/me:
+    get:
+      summary: Get current user
+      operationId: getCurrentUser
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # Accounts
+  /accounts:
+    post:
+      summary: Create SmartAccount
+      operationId: createAccount
+      tags:
+        - Accounts
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccountRequest"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    get:
+      summary: List user accounts
+      operationId: listAccounts
+      tags:
+        - Accounts
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of accounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountListResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /accounts/{id}:
+    get:
+      summary: Get account by ID
+      operationId: getAccount
+      tags:
+        - Accounts
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountResponse"
+        "404":
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /accounts/predict:
+    post:
+      summary: Predict SmartAccount address
+      operationId: predictAccountAddress
+      tags:
+        - Accounts
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PredictAddressRequest"
+      responses:
+        "200":
+          description: Predicted address
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PredictAddressResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # x402 Protocol (Public - No Auth)
+  /x402/verify:
+    post:
+      summary: Verify payment signature
+      operationId: x402Verify
+      tags:
+        - x402
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/X402VerifyRequest"
+      responses:
+        "200":
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/X402VerifyResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /x402/settle:
+    post:
+      summary: Settle payment on-chain
+      operationId: x402Settle
+      tags:
+        - x402
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/X402SettleRequest"
+      responses:
+        "200":
+          description: Settlement result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/X402SettleResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /x402/supported:
+    get:
+      summary: Get supported payment schemes
+      operationId: x402GetSupported
+      tags:
+        - x402
+      responses:
+        "200":
+          description: Supported schemes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/X402SupportedResponse"

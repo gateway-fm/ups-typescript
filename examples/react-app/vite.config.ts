@@ -7,4 +7,12 @@ export default defineConfig({
     define: {
         'process.env': {}, // Polyfill for some libs that might use process.env
     },
+    server: {
+        proxy: {
+            '/api/v1': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+            },
+        },
+    },
 });

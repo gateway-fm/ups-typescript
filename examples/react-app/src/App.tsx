@@ -1,11 +1,12 @@
-import { useAuth } from '@x402-ups/react';
+import { useAuth, useWallet } from '@x402-ups/react';
 import { WalletConnect } from './components/WalletConnect';
 import { AccountCreation } from './components/AccountCreation';
-import { AccountInfo } from './components/AccountInfo';
+import { AccountList } from './components/AccountList';
 import { PaymentForm } from './components/PaymentForm';
 
 function App() {
     const { isAuthenticated } = useAuth();
+    const { isConnected } = useWallet();
 
     return (
         <>
@@ -14,18 +15,26 @@ function App() {
             <WalletConnect />
 
             <div style={{ marginTop: '20px' }}>
-                {isAuthenticated ? (
+                {isConnected ? (
                     <>
-                        <AccountInfo />
-                        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <AccountCreation />
-                            <PaymentForm />
-                        </div>
+                        {isAuthenticated ? (
+                            <>
+                                <AccountList />
+                                <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '20px' }}>
+                                    <AccountCreation />
+                                    <PaymentForm />
+                                </div>
+                            </>
+                        ) : (
+                            <div className="card">
+                                <p>Wallet connected. Please authenticate to access features.</p>
+                                <AccountCreation />
+                            </div>
+                        )}
                     </>
                 ) : (
                     <div className="card">
-                        <p>Please connect wallet and authenticate to access features.</p>
-                        <AccountCreation />
+                        <p>Please connect your wallet to get started.</p>
                     </div>
                 )}
             </div>

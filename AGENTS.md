@@ -22,6 +22,11 @@
 
 ```
 UPSclient/
+├── api/                         # API specification & generated types
+│   ├── swagger.yaml             # OpenAPI 3.0 spec
+│   ├── generated/               # Auto-generated code
+│   │   └── api-types.ts         # Generated TypeScript types
+│   └── README.md                # API documentation
 ├── packages/
 │   ├── sdk/                    # @x402-ups/sdk - Core SDK
 │   ├── react/                  # @x402-ups/react - React hooks
@@ -64,13 +69,15 @@ const client = new UPSClient({
 // Connect wallet
 await client.connect(window.ethereum);
 
-// Authenticate (auto-detects register vs login)
-await client.authenticate();
+// Authenticate (unified flow - creates user if new, authenticates if existing)
+const result = await client.authenticate();
+console.log(result.isNewUser); // true if new user was created
 
 // Access modules
 client.wallet   // WalletModule
 client.account  // AccountModule
 client.payment  // PaymentModule
+client.user     // UserModule (new)
 client.auth     // AuthManager
 ```
 
@@ -114,6 +121,13 @@ client.auth     // AuthManager
 | `encodePaymentHeader` | `(signed, requirements) => string` | Encode as `x402` HTTP header |
 | `verify` | `(signed, requirements) => Promise<VerifyResponse>` | Verify payment with backend |
 | `settle` | `(signed, requirements) => Promise<SettleResponse>` | Settle payment on-chain |
+| `getSupportedSchemes` | `() => Promise<SupportedSchemesResponse>` | Get supported payment schemes from facilitator |
+
+#### `UserModule` (`packages/sdk/src/user/index.ts`) [NEW]
+
+| Method | Signature | Description |
+| :--- | :--- | :--- |
+| `getCurrentUser` | `() => Promise<User>` | Get current authenticated user profile |
 
 ### 3.3 Core Services
 
@@ -121,7 +135,7 @@ client.auth     // AuthManager
 | :--- | :--- | :--- |
 | `HttpClient` | `core/http-client.ts` | HTTP client with retry, timeout, auth header injection |
 | `EventBus` | `core/event-bus.ts` | Pub/sub event system for state synchronization |
-| `AuthManager` | `core/auth-manager.ts` | JWT token management, login/register/refresh |
+| `AuthManager` | `core/auth-manager.ts` | JWT token management with unified `connect()` method |
 
 ### 3.4 Type Definitions
 
@@ -136,14 +150,20 @@ type EIP1193Provider = { request, on?, removeListener? }
 interface WalletState { isConnected, address, chainId, provider }
 interface ConnectedWallet { address, chainId, provider }
 
+// User (from /auth/connect and /users/me)
+interface User { id, walletAddress, status, createdAt }
+interface ConnectResult { user, token, expiresAt, isNewUser }
+
 // Account
-interface Account { id, ownerAddress, walletAddress, accountType, status, kycLevel, createdAt, updatedAt }
+interface Account { id, ownerAddress, walletAddress, accountType, status, kycLevel, userId?, createdAt, updatedAt? }
 interface CreateAccountParams { ownerAddress, salt }
 
 // Payment (x402)
-interface PaymentRequirements { scheme, network, maxAmountRequired, asset, payTo, maxTimeoutSeconds, extra?, from? }
+interface PaymentRequirements { scheme, network, maxAmountRequired, asset, payTo, maxTimeoutSeconds, resource?, description?, extra?, from? }
 interface PaymentAuthorization { from, to, value, validAfter, validBefore, nonce }
 interface SignedAuthorization extends PaymentAuthorization { signature }
+interface SupportedScheme { x402Version, scheme, network }
+interface SupportedSchemesResponse { kinds: SupportedScheme[] }
 
 // EIP-712
 interface EIP712TypedData { domain, types, primaryType, message }

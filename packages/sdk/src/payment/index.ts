@@ -6,6 +6,7 @@ import {
     SignedAuthorization,
     VerifyResponse,
     SettleResponse,
+    SupportedSchemesResponse,
     EIP712TypedData
 } from '../types';
 import { PaymentError } from '../core/errors';
@@ -17,18 +18,24 @@ export class PaymentModule {
     ) { }
 
     async pay(request: { requirements: PaymentRequirements; from?: string }): Promise<SettleResponse> {
-        const from = request.from || this.wallet.getAddress();
+        const from = request.from || request.requirements.from || this.wallet.getAddress();
         if (!from) throw new PaymentError('No sender address provided');
 
-        const auth = this.buildAuthorization(request.requirements, from);
-        const signed = await this.signAuthorization(auth, request.requirements);
+        // Create requirements with `from` set for EIP-1271 Smart Account signature verification
+        const requirementsWithFrom: PaymentRequirements = {
+            ...request.requirements,
+            from,  // Critical: backend needs to know which Smart Account is the payer
+        };
 
-        const verification = await this.verify(signed, request.requirements);
+        const auth = this.buildAuthorization(requirementsWithFrom, from);
+        const signed = await this.signAuthorization(auth, requirementsWithFrom);
+
+        const verification = await this.verify(signed, requirementsWithFrom);
         if (!verification.isValid) {
             throw new PaymentError(`Payment verification failed: ${verification.invalidReason}`);
         }
 
-        return this.settle(signed, request.requirements);
+        return this.settle(signed, requirementsWithFrom);
     }
 
     buildAuthorization(requirements: PaymentRequirements, from: string): PaymentAuthorization {
@@ -59,6 +66,7 @@ export class PaymentModule {
 
         if (isNaN(chainId)) throw new PaymentError('Invalid chain ID');
 
+        // EIP-712 requires uint256 values as BigInt for proper encoding
         const typedData: EIP712TypedData = {
             domain: {
                 name: requirements.extra?.name || "x402 Payment Token",
@@ -80,9 +88,10 @@ export class PaymentModule {
             message: {
                 from: authorization.from,
                 to: authorization.to,
-                value: authorization.value,
-                validAfter: authorization.validAfter,
-                validBefore: authorization.validBefore,
+                // CRITICAL: viem requires BigInt for uint256 types
+                value: BigInt(authorization.value),
+                validAfter: BigInt(authorization.validAfter),
+                validBefore: BigInt(authorization.validBefore),
                 nonce: authorization.nonce
             }
         };
@@ -141,5 +150,12 @@ export class PaymentModule {
             paymentRequirements: requirements
         }, { skipAuth: true });
     }
-}
 
+    /**
+     * Get supported payment schemes from the facilitator.
+     * This endpoint does not require authentication.
+     */
+    async getSupportedSchemes(): Promise<SupportedSchemesResponse> {
+        return this.http.get<SupportedSchemesResponse>('/x402/supported', { skipAuth: true });
+    }
+}

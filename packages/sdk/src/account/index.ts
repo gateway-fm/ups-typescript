@@ -5,8 +5,8 @@ export class AccountModule {
     constructor(private http: HttpClient) { }
 
     async get(id: string): Promise<Account> {
-        const data = await this.http.get<any>(`/accounts/${id}`);
-        return this.mapAccount(data);
+        const response = await this.http.get<{ account: any }>(`/accounts/${id}`);
+        return this.mapAccount(response.account);
     }
 
     async getByWallet(address: string): Promise<Account> {
@@ -54,9 +54,10 @@ export class AccountModule {
             id: data.id,
             ownerAddress: data.owner_address,
             walletAddress: data.wallet_address,
-            accountType: data.account_type,
+            accountType: data.account_type || 'USER', // Default to USER if not provided
             status: data.status,
-            kycLevel: data.kyc_level,
+            kycLevel: data.kyc_level ?? 0,
+            userId: data.user_id,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
         };

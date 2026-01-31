@@ -68,6 +68,7 @@ export interface UseCreateAccountReturn {
     isPending: boolean;
     error: Error | null;
     data: CreateAccountResponse | undefined;
+    reset: () => void;
 }
 
 export function useCreateAccount(): UseCreateAccountReturn {
@@ -88,6 +89,7 @@ export function useCreateAccount(): UseCreateAccountReturn {
         isPending: mutation.isPending,
         error: mutation.error,
         data: mutation.data,
+        reset: mutation.reset,
     };
 }
 
