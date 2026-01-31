@@ -29,7 +29,8 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "zustand": "^4.5.0"
+        "zustand": "^4.5.0",
+        "@x402-ups/sdk": "workspace:*"
     },
     "peerDependencies": {
         "react": "^18.0.0",
