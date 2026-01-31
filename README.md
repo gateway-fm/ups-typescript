@@ -1,4 +1,4 @@
-<![CDATA[# UPS x402 SDK
+# UPS x402 SDK
 
 [![CI](https://github.com/gateway-fm/ups-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/gateway-fm/ups-typescript/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/@x402-ups%2Fsdk.svg)](https://www.npmjs.com/package/@x402-ups/sdk)
@@ -195,4 +195,4 @@ MIT © Gateway.fm
 ---
 
 Built with ❤️ for the x402 ecosystem
-]]>
+
