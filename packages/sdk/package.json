@@ -1,0 +1,55 @@
+{
+    "name": "@x402-ups/sdk",
+    "version": "0.1.0",
+    "description": "Core SDK for UPS x402 Protocol",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-org/x402-ups-sdk.git"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        },
+        "./wallet": {
+            "types": "./dist/wallet/index.d.ts",
+            "import": "./dist/wallet/index.mjs",
+            "require": "./dist/wallet/index.js"
+        },
+        "./account": {
+            "types": "./dist/account/index.d.ts",
+            "import": "./dist/account/index.mjs",
+            "require": "./dist/account/index.js"
+        },
+        "./payment": {
+            "types": "./dist/payment/index.d.ts",
+            "import": "./dist/payment/index.mjs",
+            "require": "./dist/payment/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "lint": "eslint .",
+        "typecheck": "tsc --noEmit",
+        "test:e2e": "vitest run --config vitest.e2e.config.ts"
+    },
+    "dependencies": {
+        "viem": "^2.21.0"
+    },
+    "devDependencies": {
+        "dotenv": "^17.2.3",
+        "tsup": "^8.0.0",
+        "typescript": "^5.5.0"
+    }
+}

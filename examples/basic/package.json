@@ -1,0 +1,19 @@
+{
+    "name": "@x402-ups/example-basic",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "start": "tsx src/index.ts",
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@x402-ups/sdk": "workspace:*",
+        "viem": "^2.21.0",
+        "dotenv": "^16.4.5"
+    },
+    "devDependencies": {
+        "tsx": "^4.15.0",
+        "typescript": "^5.5.0",
+        "@types/node": "^20.14.0"
+    }
+}

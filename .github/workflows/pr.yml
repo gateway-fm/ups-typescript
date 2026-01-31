@@ -1,0 +1,29 @@
+name: PR Checks
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    # Check package size
+    size:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v3
+              with:
+                  version: 9
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "pnpm"
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm build
+            - name: Check bundle size
+              run: |
+                  SDK_SIZE=$(du -sb packages/sdk/dist | cut -f1)
+                  if [ $SDK_SIZE -gt 150000 ]; then
+                    echo "SDK bundle too large: $SDK_SIZE bytes (max 150KB)"
+                    exit 1
+                  fi
+                  echo "SDK bundle size: $SDK_SIZE bytes"
