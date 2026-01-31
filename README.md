@@ -1,6 +1,6 @@
 <![CDATA[# UPS x402 SDK
 
-[![CI](https://github.com/your-org/x402-ups-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/x402-ups-sdk/actions/workflows/ci.yml)
+[![CI](https://github.com/gateway-fm/ups-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/gateway-fm/ups-typescript/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/@x402-ups%2Fsdk.svg)](https://www.npmjs.com/package/@x402-ups/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -151,8 +151,8 @@ await client.payment.settle(signed, requirements); // Settle on-chain
 ### Setup
 
 ```bash
-git clone https://github.com/your-org/x402-ups-sdk.git
-cd x402-ups-sdk
+git clone https://github.com/gateway-fm/ups-typescript.git
+cd ups-typescript
 pnpm install
 pnpm build
 ```
@@ -190,7 +190,7 @@ See [`SECRETS.md`](./SECRETS.md) for handling sensitive keys.
 
 ## License
 
-MIT © Your Organization
+MIT © Gateway.fm
 
 ---
 

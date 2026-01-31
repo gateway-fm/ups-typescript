@@ -1,6 +1,10 @@
 {
   "name": "x402-ups-sdk-monorepo",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gateway-fm/ups-typescript.git"
+  },
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r dev",
