@@ -111,13 +111,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Bump Version
+        id: version_bump
         if: "!contains(github.event.head_commit.message, 'skip ci')"
         run: |
           pnpm version patch --no-git-tag-version
           pnpm -r exec npm version patch --no-git-tag-version
           git commit -am "chore(release): bump version [skip ci]"
-          git tag "v$(node -p "require('./package.json').version")"
+          TAG="v$(node -p "require('./package.json').version")"
+          git tag "$TAG"
           git push && git push --tags
+          echo "tag_name=$TAG" >> $GITHUB_OUTPUT
 
       - name: Build
         run: pnpm build
@@ -129,5 +132,8 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
+        if: steps.version_bump.outputs.tag_name
         with:
+          tag_name: ${{ steps.version_bump.outputs.tag_name }}
+          name: Release ${{ steps.version_bump.outputs.tag_name }}
           generate_release_notes: true
