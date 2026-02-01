@@ -30,7 +30,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "zustand": "^4.5.0",
+        "zustand": "^5.0.10",
         "@gateway-fm/sdk": "workspace:*"
     },
     "peerDependencies": {
