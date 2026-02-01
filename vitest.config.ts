@@ -15,8 +15,8 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@gateway-fm/sdk': path.resolve(__dirname, './packages/sdk/src/index.ts'),
-            '@gateway-fm/react': path.resolve(__dirname, './packages/react/src/index.ts'),
+            '@gateway-fm/ups-sdk': path.resolve(__dirname, './packages/sdk/src/index.ts'),
+            '@gateway-fm/ups-react': path.resolve(__dirname, './packages/react/src/index.ts'),
             '@gateway-fm/test-utils': path.resolve(__dirname, './packages/test-utils/src/index.ts'),
         },
     },

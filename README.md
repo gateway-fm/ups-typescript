@@ -1,7 +1,7 @@
 # UPS x402 SDK
 
 [![CI](https://github.com/gateway-fm/ups-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/gateway-fm/ups-typescript/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/@gateway-fm%2Fsdk.svg)](https://www.npmjs.com/package/@gateway-fm/sdk)
+[![npm version](https://badge.fury.io/js/@gateway-fm%2Fsdk.svg)](https://www.npmjs.com/package/@gateway-fm/ups-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 TypeScript SDK for the [x402 Universal Payments Protocol](https://x402.org) — enabling seamless blockchain payments with Smart Accounts.
@@ -18,10 +18,10 @@ TypeScript SDK for the [x402 Universal Payments Protocol](https://x402.org) — 
 
 ```bash
 # Using pnpm (recommended)
-pnpm add @gateway-fm/sdk
+pnpm add @gateway-fm/ups-sdk
 
 # For React projects
-pnpm add @gateway-fm/sdk @gateway-fm/react
+pnpm add @gateway-fm/ups-sdk @gateway-fm/ups-react
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ pnpm add @gateway-fm/sdk @gateway-fm/react
 ### Node.js / Vanilla TypeScript
 
 ```typescript
-import { UPSClient } from '@gateway-fm/sdk';
+import { UPSClient } from '@gateway-fm/ups-sdk';
 
 const client = new UPSClient({
     baseUrl: 'https://api.ups.example.com',
@@ -54,7 +54,7 @@ console.log('Account created:', account.walletAddress);
 ### React
 
 ```tsx
-import { UPSProvider, useWallet, useAccount, usePayment } from '@gateway-fm/react';
+import { UPSProvider, useWallet, useAccount, usePayment } from '@gateway-fm/ups-react';
 
 function App() {
     return (
@@ -87,8 +87,8 @@ function PaymentFlow() {
 
 | Package | Description | Docs |
 | :--- | :--- | :--- |
-| [`@gateway-fm/sdk`](./packages/sdk) | Core SDK — wallet, account, and payment modules | [README](./packages/sdk/README.md) |
-| [`@gateway-fm/react`](./packages/react) | React hooks and context provider | [README](./packages/react/README.md) |
+| [`@gateway-fm/ups-sdk`](./packages/sdk) | Core SDK — wallet, account, and payment modules | [README](./packages/sdk/README.md) |
+| [`@gateway-fm/ups-react`](./packages/react) | React hooks and context provider | [README](./packages/react/README.md) |
 | [`@gateway-fm/test-utils`](./packages/test-utils) | Testing utilities and mocks | — |
 
 ## Examples

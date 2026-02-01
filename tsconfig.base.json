@@ -11,10 +11,10 @@
         "resolveJsonModule": true,
         "baseUrl": ".",
         "paths": {
-            "@gateway-fm/sdk": [
+            "@gateway-fm/ups-sdk": [
                 "./packages/sdk/src/index.ts"
             ],
-            "@gateway-fm/react": [
+            "@gateway-fm/ups-react": [
                 "./packages/react/src/index.ts"
             ],
             "@gateway-fm/test-utils": [

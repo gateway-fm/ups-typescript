@@ -8,8 +8,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@gateway-fm/sdk": "workspace:*",
-        "@gateway-fm/react": "workspace:*",
+        "@gateway-fm/ups-sdk": "workspace:*",
+        "@gateway-fm/ups-react": "workspace:*",
         "@tanstack/react-query": "^5.50.0",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",

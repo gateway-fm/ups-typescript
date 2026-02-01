@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createWalletClient, custom, formatUnits, type EIP1193Provider } from 'viem';
-import { useUPSClient, useWallet } from '@gateway-fm/react';
+import { useUPSClient, useWallet } from '@gateway-fm/ups-react';
 import { useToken, publicClient, PAYMENT_TOKEN_ADDRESS, ERC20_ABI } from '../context/TokenContext';
 
 export function WalletConnect() {

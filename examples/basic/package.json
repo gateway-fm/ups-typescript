@@ -7,7 +7,7 @@
         "build": "tsc"
     },
     "dependencies": {
-        "@gateway-fm/sdk": "workspace:*",
+        "@gateway-fm/ups-sdk": "workspace:*",
         "viem": "^2.21.0",
         "dotenv": "^17.2.3"
     },

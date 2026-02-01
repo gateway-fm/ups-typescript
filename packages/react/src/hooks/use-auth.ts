@@ -1,5 +1,5 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { type AuthState } from '@gateway-fm/sdk';
+import { type AuthState } from '@gateway-fm/ups-sdk';
 import { useUPSStore } from '../store';
 import { useUPSClient } from '../provider';
 

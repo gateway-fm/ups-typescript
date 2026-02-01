@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { UPSClient, WalletState, AuthState, Account } from '@gateway-fm/sdk';
+import type { UPSClient, WalletState, AuthState, Account } from '@gateway-fm/ups-sdk';
 
 export interface UPSStore {
     // Client instance

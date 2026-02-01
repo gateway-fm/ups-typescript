@@ -1,5 +1,5 @@
 {
-    "name": "@gateway-fm/sdk",
+    "name": "@gateway-fm/ups-sdk",
     "version": "0.1.8",
     "description": "Core SDK for UPS x402 Protocol",
     "main": "./dist/index.js",

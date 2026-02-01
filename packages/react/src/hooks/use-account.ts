@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient, UseQueryResult } from '@tanstack/react-query';
-import { type Account, type CreateAccountParams, type CreateAccountResponse } from '@gateway-fm/sdk';
+import { type Account, type CreateAccountParams, type CreateAccountResponse } from '@gateway-fm/ups-sdk';
 import { useUPSStore } from '../store';
 import { useUPSClient } from '../provider';
 
