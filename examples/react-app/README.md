@@ -1,6 +1,6 @@
 # UPS SDK React Example
 
-This example demonstrates how to use the UPS SDK in a React application using the `@x402-ups/react` hooks library.
+This example demonstrates how to use the UPS SDK in a React application using the `@gateway-fm/react` hooks library.
 
 ## Features
 

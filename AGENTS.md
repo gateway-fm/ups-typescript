@@ -30,7 +30,7 @@ UPSclient/
 ├── packages/
 │   ├── sdk/                    # @gateway-fm/sdk - Core SDK
 │   ├── react/                  # @gateway-fm/react - React hooks
-│   └── test-utils/             # @x402-ups/test-utils - Testing utilities
+│   └── test-utils/             # @gateway-fm/test-utils - Testing utilities
 ├── examples/
 │   ├── basic/                  # Node.js example
 │   └── react-app/              # React/Vite example
@@ -46,7 +46,7 @@ UPSclient/
 | :--- | :--- | :--- | :--- |
 | `@gateway-fm/sdk` | `packages/sdk` | Core SDK with wallet, account, and payment modules | `., ./wallet, ./account, ./payment` |
 | `@gateway-fm/react` | `packages/react` | React hooks and context provider | `.` |
-| `@x402-ups/test-utils` | `packages/test-utils` | Mock providers and test utilities | `.` |
+| `@gateway-fm/test-utils` | `packages/test-utils` | Mock providers and test utilities | `.` |
 
 ---
 

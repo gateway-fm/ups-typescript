@@ -21,7 +21,7 @@ TypeScript SDK for the [x402 Universal Payments Protocol](https://x402.org) — 
 pnpm add @gateway-fm/sdk
 
 # For React projects
-pnpm add @gateway-fm/sdk @x402-ups/react
+pnpm add @gateway-fm/sdk @gateway-fm/react
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ pnpm add @gateway-fm/sdk @x402-ups/react
 ### Node.js / Vanilla TypeScript
 
 ```typescript
-import { UPSClient } from '@x402-ups/sdk';
+import { UPSClient } from '@gateway-fm/sdk';
 
 const client = new UPSClient({
     baseUrl: 'https://api.ups.example.com',
@@ -54,7 +54,7 @@ console.log('Account created:', account.walletAddress);
 ### React
 
 ```tsx
-import { UPSProvider, useWallet, useAccount, usePayment } from '@x402-ups/react';
+import { UPSProvider, useWallet, useAccount, usePayment } from '@gateway-fm/react';
 
 function App() {
     return (
@@ -87,9 +87,9 @@ function PaymentFlow() {
 
 | Package | Description | Docs |
 | :--- | :--- | :--- |
-| [`@x402-ups/sdk`](./packages/sdk) | Core SDK — wallet, account, and payment modules | [README](./packages/sdk/README.md) |
-| [`@x402-ups/react`](./packages/react) | React hooks and context provider | [README](./packages/react/README.md) |
-| [`@x402-ups/test-utils`](./packages/test-utils) | Testing utilities and mocks | — |
+| [`@gateway-fm/sdk`](./packages/sdk) | Core SDK — wallet, account, and payment modules | [README](./packages/sdk/README.md) |
+| [`@gateway-fm/react`](./packages/react) | React hooks and context provider | [README](./packages/react/README.md) |
+| [`@gateway-fm/test-utils`](./packages/test-utils) | Testing utilities and mocks | — |
 
 ## Examples
 
