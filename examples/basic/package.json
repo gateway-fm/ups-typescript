@@ -1,5 +1,5 @@
 {
-    "name": "@x402-ups/example-basic",
+    "name": "@gateway-fm/example-basic",
     "private": true,
     "type": "module",
     "scripts": {
@@ -16,10 +16,5 @@
         "typescript": "^5.5.0",
         "@types/node": "^20.14.0"
     },
-<<<<<<< HEAD
     "version": "0.0.4"
 }
-=======
-    "version": "0.0.3"
-}
->>>>>>> 9983212 (refactor: rename packages to @gateway-fm scope and config for GPR)
