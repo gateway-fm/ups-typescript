@@ -1,6 +1,6 @@
 {
     "name": "@x402-ups/sdk",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Core SDK for UPS x402 Protocol",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
