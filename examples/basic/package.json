@@ -7,7 +7,7 @@
         "build": "tsc"
     },
     "dependencies": {
-        "@x402-ups/sdk": "workspace:*",
+        "@gateway-fm/sdk": "workspace:*",
         "viem": "^2.21.0",
         "dotenv": "^16.4.5"
     },
@@ -16,5 +16,10 @@
         "typescript": "^5.5.0",
         "@types/node": "^20.14.0"
     },
+<<<<<<< HEAD
     "version": "0.0.4"
 }
+=======
+    "version": "0.0.3"
+}
+>>>>>>> 9983212 (refactor: rename packages to @gateway-fm scope and config for GPR)

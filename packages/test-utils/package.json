@@ -1,5 +1,5 @@
 {
-    "name": "@x402-ups/test-utils",
+    "name": "@gateway-fm/test-utils",
     "version": "0.1.4",
     "description": "Test utilities for UPS x402 SDK",
     "main": "src/index.ts",

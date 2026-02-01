@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useAccounts, useWallet } from '@x402-ups/react';
+import { useAccounts, useWallet } from '@gateway-fm/react';
 import { createWalletClient, custom, parseUnits, type EIP1193Provider } from 'viem';
-import type { Account } from '@x402-ups/sdk';
+import type { Account } from '@gateway-fm/sdk';
 import { PAYMENT_TOKEN_ADDRESS, ERC20_ABI, RPC_URL, CHAIN_ID } from '../context/TokenContext';
 import { useBalances } from '../context/BalanceContext';
 

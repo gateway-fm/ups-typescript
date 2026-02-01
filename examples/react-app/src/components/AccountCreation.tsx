@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useCreateAccount, useAuth, useUPSClient, useAccounts } from '@x402-ups/react';
+import { useCreateAccount, useAuth, useUPSClient, useAccounts } from '@gateway-fm/react';
 import { bytesToHex } from 'viem';
 
 export function AccountCreation() {

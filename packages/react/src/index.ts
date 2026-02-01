@@ -20,4 +20,4 @@ export {
 export { usePayment, usePaymentVerify, usePaymentSettle } from './hooks/use-payment';
 
 // Re-export types from SDK
-export type { UPSConfig, Account, PaymentRequirements, SettleResponse as PaymentResult } from '@x402-ups/sdk';
+export type { UPSConfig, Account, PaymentRequirements, SettleResponse as PaymentResult } from '@gateway-fm/sdk';

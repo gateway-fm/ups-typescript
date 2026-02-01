@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react';
 import { formatUnits } from 'viem';
-import { useAccounts } from '@x402-ups/react';
+import { useAccounts } from '@gateway-fm/react';
 import { publicClient, PAYMENT_TOKEN_ADDRESS, ERC20_ABI } from './TokenContext';
 
 interface BalanceContextValue {

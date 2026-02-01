@@ -28,8 +28,8 @@ UPSclient/
 │   │   └── api-types.ts         # Generated TypeScript types
 │   └── README.md                # API documentation
 ├── packages/
-│   ├── sdk/                    # @x402-ups/sdk - Core SDK
-│   ├── react/                  # @x402-ups/react - React hooks
+│   ├── sdk/                    # @gateway-fm/sdk - Core SDK
+│   ├── react/                  # @gateway-fm/react - React hooks
 │   └── test-utils/             # @x402-ups/test-utils - Testing utilities
 ├── examples/
 │   ├── basic/                  # Node.js example
@@ -44,20 +44,20 @@ UPSclient/
 
 | Package | Path | Description | Exports |
 | :--- | :--- | :--- | :--- |
-| `@x402-ups/sdk` | `packages/sdk` | Core SDK with wallet, account, and payment modules | `., ./wallet, ./account, ./payment` |
-| `@x402-ups/react` | `packages/react` | React hooks and context provider | `.` |
+| `@gateway-fm/sdk` | `packages/sdk` | Core SDK with wallet, account, and payment modules | `., ./wallet, ./account, ./payment` |
+| `@gateway-fm/react` | `packages/react` | React hooks and context provider | `.` |
 | `@x402-ups/test-utils` | `packages/test-utils` | Mock providers and test utilities | `.` |
 
 ---
 
-## 3. SDK Architecture (`@x402-ups/sdk`)
+## 3. SDK Architecture (`@gateway-fm/sdk`)
 
 ### 3.1 Entry Point: `UPSClient`
 
 The main class that orchestrates all SDK functionality.
 
 ```typescript
-import { UPSClient } from '@x402-ups/sdk';
+import { UPSClient } from '@gateway-fm/sdk';
 
 const client = new UPSClient({
     baseUrl: 'https://api.ups.example.com',
@@ -179,12 +179,12 @@ All in `packages/sdk/src/core/errors.ts`:
 
 ---
 
-## 4. React Integration (`@x402-ups/react`)
+## 4. React Integration (`@gateway-fm/react`)
 
 ### 4.1 Provider Setup
 
 ```tsx
-import { UPSProvider } from '@x402-ups/react';
+import { UPSProvider } from '@gateway-fm/react';
 
 function App() {
     const config = { baseUrl: '...', network: 'eip155:84532' };
@@ -390,7 +390,7 @@ vi.mock('../core/http-client', () => ({
 ### Basic Node.js Example (`examples/basic/`)
 
 ```typescript
-import { UPSClient } from '@x402-ups/sdk';
+import { UPSClient } from '@gateway-fm/sdk';
 import { createWalletClient, http } from 'viem';
 
 const client = new UPSClient({ baseUrl: '...', network: 'eip155:84532' });

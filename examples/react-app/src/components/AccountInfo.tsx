@@ -1,4 +1,4 @@
-import { useAccounts, useCurrentAccount } from '@x402-ups/react';
+import { useAccounts, useCurrentAccount } from '@gateway-fm/react';
 
 export function AccountInfo() {
     const { data: accounts, isLoading } = useAccounts();

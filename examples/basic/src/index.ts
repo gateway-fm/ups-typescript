@@ -1,4 +1,4 @@
-import { UPSClient } from '@x402-ups/sdk';
+import { UPSClient } from '@gateway-fm/sdk';
 import { createWalletClient, http, hexToBytes, bytesToHex, createPublicClient, defineChain } from 'viem';
 import { privateKeyToAccount, generatePrivateKey } from 'viem/accounts';
 import { baseSepolia } from 'viem/chains';

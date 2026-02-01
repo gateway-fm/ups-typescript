@@ -100,7 +100,7 @@ jobs:
           node-version: "20"
           cache: "pnpm"
           registry-url: "https://npm.pkg.github.com"
-          scope: "@x402-ups"
+          scope: "@gateway-fm"
 
       - name: Configure Git User
         run: |

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { UPSClient, type UPSConfig } from '@x402-ups/sdk';
+import { UPSClient, type UPSConfig } from '@gateway-fm/sdk';
 import { useUPSStore } from './store';
 
 interface UPSContextValue {
