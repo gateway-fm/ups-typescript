@@ -1,7 +1,7 @@
 {
   "name": "@gateway-fm/sdk-monorepo",
   "private": true,
-  "version": "0.0.10",
+  "version": "0.0.11",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gateway-fm/ups-typescript.git"
