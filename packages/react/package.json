@@ -1,6 +1,6 @@
 {
     "name": "@gatewayfm/ups-react",
-    "version": "0.1.12",
+    "version": "0.1.13",
     "description": "React hooks and providers for UPS x402 SDK",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
