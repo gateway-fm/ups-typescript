@@ -99,8 +99,6 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
-          registry-url: "https://registry.npmjs.org"
-          scope: "@gateway-fm"
 
       - name: Configure Git User
         run: |
@@ -126,9 +124,11 @@ jobs:
         run: pnpm build
 
       - name: Publish to NPM
-        run: pnpm -r publish --access public --no-git-checks
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          pnpm -r publish --access public --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_JS_TOKEN_PUBLISH }}
+          NPM_TOKEN: ${{ secrets.NPM_JS_TOKEN_PUBLISH }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
