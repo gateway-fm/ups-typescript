@@ -107,6 +107,7 @@ export interface PaymentExtra {
     payment_type?: PaymentType; // snake_case from API
     arbiter?: string;
     release_time?: number; // snake_case from API
+    payee?: string; // intended recipient for escrow
 }
 
 export interface PaymentAuthorization {

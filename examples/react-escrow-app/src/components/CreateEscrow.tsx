@@ -1,9 +1,25 @@
 import { useState, useEffect } from 'react';
 import { usePayment, useAccounts } from '@gateway-fm/ups-react';
-import { parseUnits } from 'viem';
+import { parseUnits, decodeEventLog } from 'viem';
 import { Account, PaymentType } from '@gateway-fm/ups-sdk';
-import { PAYMENT_TOKEN_ADDRESS } from '../context/TokenContext';
+import { PAYMENT_TOKEN_ADDRESS, publicClient } from '../context/TokenContext';
 import { useBalances } from '../context/BalanceContext';
+
+// Minimal ABI for EscrowCreated event
+const ESCROW_EVENT_ABI = [
+    {
+        anonymous: false,
+        inputs: [
+            { indexed: true, name: 'escrowId', type: 'bytes32' },
+            { indexed: true, name: 'payer', type: 'address' },
+            { indexed: true, name: 'payee', type: 'address' },
+            { indexed: false, name: 'amount', type: 'uint256' },
+            { indexed: false, name: 'arbiter', type: 'address' }
+        ],
+        name: 'EscrowCreated',
+        type: 'event',
+    }
+] as const;
 
 export function CreateEscrow() {
     const { pay, isPending, error, data } = usePayment();
@@ -15,6 +31,7 @@ export function CreateEscrow() {
     const [arbiter, setArbiter] = useState('');
     const [amount, setAmount] = useState('1');
     const [releaseDelay, setReleaseDelay] = useState('3600'); // Seconds
+    const [createdEscrowId, setCreatedEscrowId] = useState<string | null>(null);
 
     const selectedBalance = selectedAccount ? balances[selectedAccount.id] : null;
 
@@ -24,10 +41,40 @@ export function CreateEscrow() {
         }
     }, [accounts, selectedAccount]);
 
-    // Simple auto-refresh trigger when payment succeeds (transaction hash available)
+    // Parse logs when transaction succeeds
     useEffect(() => {
         if (data?.transaction) {
-            triggerRefresh();
+            triggerRefresh(); // Refresh balances
+
+            // Fetch receipt to get logs
+            const fetchReceipt = async () => {
+                try {
+                    const receipt = await publicClient.waitForTransactionReceipt({
+                        hash: data.transaction as `0x${string}`
+                    });
+
+                    for (const log of receipt.logs) {
+                        try {
+                            const decoded = decodeEventLog({
+                                abi: ESCROW_EVENT_ABI,
+                                data: log.data,
+                                topics: log.topics,
+                            });
+
+                            if (decoded.eventName === 'EscrowCreated') {
+                                setCreatedEscrowId(decoded.args.escrowId);
+                                break;
+                            }
+                        } catch {
+                            // Ignore logs that don't match our ABI
+                            continue;
+                        }
+                    }
+                } catch (err) {
+                    console.error('Failed to parse logs:', err);
+                }
+            };
+            fetchReceipt();
         }
     }, [data?.transaction, triggerRefresh]);
 
@@ -50,24 +97,29 @@ export function CreateEscrow() {
 
     const handleCreate = () => {
         if (!selectedAccount || !isValidAmount()) return;
+        setCreatedEscrowId(null); // Reset previous ID
 
         const networkId = import.meta.env.VITE_NETWORK_ID || 'eip155:737998412';
         const atomicAmount = getAtomicAmount();
         const releaseTime = Math.floor(Date.now() / 1000) + parseInt(releaseDelay);
+
+        // Escrow Contract on TAU Testnet (from error message)
+        const ESCROW_CONTRACT_ADDRESS = '0xcc5b2cef495510EbC98ce41600C81CaF67B791E1';
 
         const requirements = {
             scheme: 'exact',
             network: networkId,
             maxAmountRequired: atomicAmount,
             asset: PAYMENT_TOKEN_ADDRESS,
-            payTo: recipient,
+            payTo: ESCROW_CONTRACT_ADDRESS, // Must pay to the Escrow Contract
             maxTimeoutSeconds: 3600,
             extra: {
                 name: 'x402 Payment Token',
                 version: '1',
                 payment_type: PaymentType.ESCROW,
-                arbiter: arbiter || undefined, // Optional if backend has default? Or required?
-                release_time: releaseTime
+                arbiter: arbiter || undefined,
+                release_time: releaseTime,
+                payee: recipient // The ultimate beneficiary
             }
         };
 
@@ -84,6 +136,7 @@ export function CreateEscrow() {
         return (
             <div className="card">
                 <h3 style={{ color: '#22c55e' }}>✓ Escrow Created!</h3>
+                <p><strong>Escrow ID:</strong> <code>{createdEscrowId || 'Fetching from logs...'}</code></p>
                 <p><strong>TX:</strong> <code>{data.transaction}</code></p>
                 <p><strong>Amount:</strong> {amount} {symbol}</p>
                 <p><strong>Payee:</strong> {recipient}</p>
