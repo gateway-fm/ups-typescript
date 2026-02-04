@@ -16,8 +16,7 @@ export function renderWithProviders(ui: ReactElement, options?: {
 
     const defaultConfig: UPSConfig = {
         baseUrl: 'http://test-api.com',
-        appName: 'TestApp',
-        network: 'eip155:84532', // Base Sepolia
+        network: 'eip155:737998412', // TAU Testnet
         ...options?.config,
     };
 
@@ -41,8 +40,7 @@ export const createWrapper = (options?: { config?: Partial<UPSConfig> }) => {
 
     const defaultConfig: UPSConfig = {
         baseUrl: 'http://test-api.com',
-        appName: 'TestApp',
-        network: 'eip155:84532',
+        network: 'eip155:737998412',
         ...options?.config,
     };
 

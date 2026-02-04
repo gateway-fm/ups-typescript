@@ -9,7 +9,7 @@ export function createMockProvider(account: LocalAccount): EIP1193Provider {
                 case 'eth_accounts':
                     return [account.address];
                 case 'eth_chainId':
-                    return '0x14a34'; // 84532 Base Sepolia
+                    return '0x2bfdb68c'; // 737998412 TAU Testnet
                 case 'personal_sign': {
                     const [message, address] = params as [string, string];
                     if (address.toLowerCase() !== account.address.toLowerCase()) {

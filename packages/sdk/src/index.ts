@@ -9,4 +9,5 @@ export { AuthManager } from './core/auth-manager';
 export { WalletModule } from './wallet';
 export { AccountModule } from './account';
 export { PaymentModule } from './payment';
+export { EscrowModule } from './escrow';
 export { UserModule } from './user';

@@ -61,7 +61,7 @@ import { UPSClient } from '@gateway-fm/ups-sdk';
 
 const client = new UPSClient({
     baseUrl: 'https://api.ups.example.com',
-    network: 'eip155:84532',  // CAIP-2 format
+    network: 'eip155:737998412',  // CAIP-2 format
     timeout: 30000,
     retryAttempts: 3
 });
@@ -96,7 +96,7 @@ client.auth     // AuthManager
 | `isConnected` | `() => boolean` | Check connection status |
 | `onStateChange` | `(callback) => () => void` | Subscribe to state changes (returns unsubscribe fn) |
 
-**Supported Chains:** Mainnet, Base, Base Sepolia (via `viem/chains`)
+**Supported Chains:** TAU Testnet, Base, Base Sepolia (via `viem/chains`)
 
 #### `AccountModule` (`packages/sdk/src/account/index.ts`)
 
@@ -187,7 +187,7 @@ All in `packages/sdk/src/core/errors.ts`:
 import { UPSProvider } from '@gateway-fm/ups-react';
 
 function App() {
-    const config = { baseUrl: '...', network: 'eip155:84532' };
+    const config = { baseUrl: '...', network: 'eip155:737998412' };
     return (
         <UPSProvider config={config}>
             <YourApp />
@@ -393,7 +393,7 @@ vi.mock('../core/http-client', () => ({
 import { UPSClient } from '@gateway-fm/ups-sdk';
 import { createWalletClient, http } from 'viem';
 
-const client = new UPSClient({ baseUrl: '...', network: 'eip155:84532' });
+const client = new UPSClient({ baseUrl: '...', network: 'eip155:737998412' });
 // Connect, authenticate, create accounts (buyer/merchant), fund buyer, make payment
 ```
 

@@ -7,7 +7,7 @@ describe('UPSClient', () => {
     beforeEach(() => {
         client = new UPSClient({
             baseUrl: 'http://test.com',
-            network: 'eip155:84532',
+            network: 'eip155:737998412',
         });
     });
 

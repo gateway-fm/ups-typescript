@@ -15,7 +15,7 @@ function generateSalt(): Uint8Array {
 
 const config = {
     baseUrl: process.env.UPS_API_URL || 'http://localhost:8080',
-    network: process.env.NETWORK_ID || 'eip155:84532',
+    network: process.env.NETWORK_ID || 'eip155:737998412',
 };
 
 async function createAccount(role: string): Promise<{ client: UPSClient, account: any }> {

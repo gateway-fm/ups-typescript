@@ -11,7 +11,7 @@ TypeScript SDK for the [x402 Universal Payments Protocol](https://x402.org) — 
 - 🔐 **Smart Account Management** — Create and manage EIP-4337 compatible accounts
 - 💸 **x402 Payments** — EIP-3009 transfer authorizations with typed signatures
 - ⚛️ **React Hooks** — First-class React integration with TanStack Query
-- 🔄 **Multi-Chain** — Base, Base Sepolia, and Ethereum Mainnet support
+- 🔄 **Multi-Chain** — TAU, Base, Base Sepolia, and Ethereum Mainnet support
 - 📦 **Dual Build** — ESM and CommonJS compatible
 
 ## Installation
@@ -33,7 +33,7 @@ import { UPSClient } from '@gateway-fm/ups-sdk';
 
 const client = new UPSClient({
     baseUrl: 'https://api.ups.example.com',
-    network: 'eip155:84532', // Base Sepolia
+    network: 'eip155:737998412', // TAU Testnet
 });
 
 // Connect wallet (EIP-1193 provider)
@@ -58,7 +58,7 @@ import { UPSProvider, useWallet, useAccount, usePayment } from '@gateway-fm/ups-
 
 function App() {
     return (
-        <UPSProvider config={{ baseUrl: '...', network: 'eip155:84532' }}>
+        <UPSProvider config={{ baseUrl: '...', network: 'eip155:737998412' }}>
             <PaymentFlow />
         </UPSProvider>
     );

@@ -9,7 +9,7 @@ const createWrapper = () => {
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     return ({ children }: { children: React.ReactNode }) => (
         <QueryClientProvider client={queryClient}>
-            <UPSProvider config={{ baseUrl: 'http://test.com', network: 'eip155:84532' }}>
+            <UPSProvider config={{ baseUrl: 'http://test.com', network: 'eip155:737998412' }}>
                 {children}
             </UPSProvider>
         </QueryClientProvider>

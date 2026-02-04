@@ -128,7 +128,7 @@ export const handlers = [
         return HttpResponse.json({
             success: true,
             transaction: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-            network: 'eip155:84532',
+            network: 'eip155:737998412',
             payer: '0xmockpayer...',
         });
     }),
@@ -136,7 +136,7 @@ export const handlers = [
     http.get('*/x402/supported', () => {
         return HttpResponse.json({
             kinds: [
-                { x402Version: 1, scheme: 'exact', network: 'eip155:84532' },
+                { x402Version: 1, scheme: 'exact', network: 'eip155:737998412' },
                 { x402Version: 1, scheme: 'exact', network: 'eip155:8453' },
             ],
             extensions: [],

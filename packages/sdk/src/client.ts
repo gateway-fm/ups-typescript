@@ -4,6 +4,7 @@ import { AuthManager } from './core/auth-manager';
 import { WalletModule } from './wallet';
 import { AccountModule } from './account';
 import { PaymentModule } from './payment';
+import { EscrowModule } from './escrow';
 import { UserModule } from './user';
 import { UPSConfig, ConnectedWallet, EIP1193Provider, ConnectResult } from './types';
 import { WalletError } from './core/errors';
@@ -14,6 +15,7 @@ export class UPSClient {
     readonly auth: AuthManager;
     readonly account: AccountModule;
     readonly payment: PaymentModule;
+    readonly escrow: EscrowModule;
     readonly user: UserModule;
 
     private http: HttpClient;
@@ -40,6 +42,7 @@ export class UPSClient {
         this.wallet = new WalletModule(this.eventBus);
         this.account = new AccountModule(this.http);
         this.payment = new PaymentModule(this.http, this.wallet);
+        this.escrow = new EscrowModule(this.http);
         this.user = new UserModule(this.http);
     }
 

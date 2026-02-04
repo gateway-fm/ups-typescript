@@ -125,7 +125,13 @@ export interface paths {
         /** List user accounts */
         get: operations["listAccounts"];
         put?: never;
-        /** Create SmartAccount */
+        /**
+         * Create SmartAccount
+         * @description Creates a new Smart Account for the authenticated user.
+         *     Users can create multiple accounts using different salts - each unique owner+salt combination
+         *     produces a distinct account address. If an account with the same owner+salt already exists,
+         *     the existing account is returned (idempotent behavior).
+         */
         post: operations["createAccount"];
         delete?: never;
         options?: never;
@@ -218,6 +224,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/x402/escrow/{escrowId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get escrow details */
+        get: operations["getEscrow"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/x402/escrow/{escrowId}/release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Release escrow funds */
+        post: operations["releaseEscrow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/x402/escrow/{escrowId}/refund": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refund escrow funds */
+        post: operations["refundEscrow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -281,9 +338,9 @@ export interface components {
             user?: components["schemas"]["User"];
         };
         CreateAccountRequest: {
-            /** @description 0x-prefixed EOA address */
+            /** @description 0x-prefixed EOA address that will own the Smart Account */
             owner_address: string;
-            /** @description 0x-prefixed 32-byte salt */
+            /** @description 0x-prefixed 32-byte salt. Different salts allow creation of multiple accounts for the same owner. Same owner+salt combination is idempotent. */
             salt: string;
         };
         Account: {
@@ -312,6 +369,20 @@ export interface components {
         PredictAddressResponse: {
             wallet_address?: string;
         };
+        /** @enum {string} */
+        PaymentType: "UNSPECIFIED" | "DIRECT" | "ESCROW";
+        PaymentExtra: {
+            name?: string;
+            version?: string;
+            payment_type?: components["schemas"]["PaymentType"];
+            /** @description Arbiter address for escrow (optional override) */
+            arbiter?: string;
+            /**
+             * Format: int64
+             * @description Unix timestamp for release
+             */
+            release_time?: number;
+        };
         PaymentRequirements: {
             scheme?: string;
             network?: string;
@@ -321,7 +392,7 @@ export interface components {
             payTo?: string;
             maxTimeoutSeconds?: number;
             asset?: string;
-            extra?: Record<string, never>;
+            extra?: components["schemas"]["PaymentExtra"];
         };
         X402VerifyRequest: {
             x402Version: number;
@@ -329,8 +400,12 @@ export interface components {
             paymentRequirements: components["schemas"]["PaymentRequirements"];
         };
         X402VerifyResponse: {
+            /** @description Whether the payment authorization is valid */
             isValid?: boolean;
+            /** @description Reason for invalidity (omitted if valid) */
             invalidReason?: string;
+            /** @description 0x-prefixed payer wallet address */
+            payer?: string;
         };
         X402SettleRequest: {
             x402Version: number;
@@ -338,18 +413,49 @@ export interface components {
             paymentRequirements: components["schemas"]["PaymentRequirements"];
         };
         X402SettleResponse: {
+            /** @description Whether settlement was successful */
             success?: boolean;
-            error?: string;
-            txHash?: string;
-            networkId?: string;
-        };
-        X402SupportedScheme: {
-            x402Version?: number;
-            scheme?: string;
+            /** @description Reason for failure (only if success: false) */
+            errorReason?: string;
+            /** @description Blockchain transaction hash (0x-prefixed) */
+            transaction?: string;
+            /** @description Network in CAIP-2 format (e.g., eip155:84532) */
             network?: string;
+            /** @description 0x-prefixed payer wallet address */
+            payer?: string;
         };
         X402SupportedResponse: {
-            kinds?: components["schemas"]["X402SupportedScheme"][];
+            kinds?: {
+                x402Version?: number;
+                scheme?: string;
+                network?: string;
+            }[];
+            /** @description Supported x402 extensions */
+            extensions?: string[];
+            /** @description Map of CAIP-2 patterns to signer addresses */
+            signers?: {
+                [key: string]: string[];
+            };
+        };
+        GetEscrowResponse: {
+            escrowId?: string;
+            payer?: string;
+            payee?: string;
+            amount?: string;
+            arbiter?: string;
+            /** Format: int64 */
+            releaseTime?: number;
+            /** @description ACTIVE, RELEASED, REFUNDED */
+            status?: string;
+        };
+        EscrowActionRequest: {
+            network?: string;
+        };
+        EscrowActionResponse: {
+            success?: boolean;
+            errorReason?: string;
+            transaction?: string;
+            network?: string;
         };
         Error: {
             code?: string;
@@ -358,7 +464,13 @@ export interface components {
     };
     responses: never;
     parameters: never;
-    requestBodies: never;
+    requestBodies: {
+        EscrowActionRequest: {
+            content: {
+                "application/json": components["schemas"]["EscrowActionRequest"];
+            };
+        };
+    };
     headers: never;
     pathItems: never;
 }
@@ -785,6 +897,114 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["X402SupportedResponse"];
+                };
+            };
+        };
+    };
+    getEscrow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Escrow ID (hex string) */
+                escrowId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Escrow details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GetEscrowResponse"];
+                };
+            };
+            /** @description Escrow not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    releaseEscrow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                escrowId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: components["requestBodies"]["EscrowActionRequest"];
+        responses: {
+            /** @description Release result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EscrowActionResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden (Not arbiter) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    refundEscrow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                escrowId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: components["requestBodies"]["EscrowActionRequest"];
+        responses: {
+            /** @description Refund result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EscrowActionResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden (Not arbiter) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
                 };
             };
         };

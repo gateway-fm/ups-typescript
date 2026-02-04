@@ -1,6 +1,6 @@
 export interface UPSConfig {
     baseUrl: string;           // API base URL
-    network: string;           // CAIP-2 format: "eip155:84532"
+    network: string;           // CAIP-2 format: "eip155:737998412"
     chainId?: number;          // Optional, parsed from network if not provided
     timeout?: number;          // Request timeout (default: 30000)
     retryAttempts?: number;    // Retry count (default: 3)
@@ -90,8 +90,23 @@ export interface PaymentRequirements {
     maxTimeoutSeconds: number;
     resource?: string;
     description?: string;
-    extra?: { name?: string; version?: string };
+
+    extra?: PaymentExtra;
     from?: string;
+}
+
+export enum PaymentType {
+    UNSPECIFIED = 'UNSPECIFIED',
+    DIRECT = 'DIRECT',
+    ESCROW = 'ESCROW'
+}
+
+export interface PaymentExtra {
+    name?: string;
+    version?: string;
+    payment_type?: PaymentType; // snake_case from API
+    arbiter?: string;
+    release_time?: number; // snake_case from API
 }
 
 export interface PaymentAuthorization {
@@ -153,4 +168,25 @@ export interface EIP712TypedData {
     primaryType: string;
     message: Record<string, unknown>;
 }
+
+// Escrow
+export interface Escrow {
+    escrowId: string;
+    payer: string;
+    payee: string;
+    amount: string;
+    arbiter: string;
+    releaseTime: number;
+    status: EscrowStatus;
+}
+
+export type EscrowStatus = 'ACTIVE' | 'RELEASED' | 'REFUNDED';
+
+export interface EscrowActionResponse {
+    success: boolean;
+    errorReason?: string;
+    transaction?: string;
+    network?: string;
+}
+
 
