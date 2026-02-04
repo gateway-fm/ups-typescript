@@ -1,5 +1,5 @@
 {
-    "name": "@gateway-fm/example-basic",
+    "name": "@gatewayfm/example-basic",
     "private": true,
     "type": "module",
     "scripts": {
@@ -7,7 +7,7 @@
         "build": "tsc"
     },
     "dependencies": {
-        "@gateway-fm/ups-sdk": "workspace:*",
+        "@gatewayfm/ups-sdk": "workspace:*",
         "viem": "^2.21.0",
         "dotenv": "^17.2.3"
     },

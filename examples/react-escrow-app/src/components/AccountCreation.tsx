@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useCreateAccount, useAuth, useUPSClient, useAccounts } from '@gateway-fm/ups-react';
+import { useCreateAccount, useAuth, useUPSClient, useAccounts } from '@gatewayfm/ups-react';
 import { bytesToHex } from 'viem';
 
 export function AccountCreation() {

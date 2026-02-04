@@ -4,7 +4,7 @@ import {
     type SignedAuthorization,
     type VerifyResponse,
     type SettleResponse
-} from '@gateway-fm/ups-sdk';
+} from '@gatewayfm/ups-sdk';
 import { useUPSClient } from '../provider';
 
 export interface UsePaymentParams {

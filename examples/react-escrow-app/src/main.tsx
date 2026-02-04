@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { UPSProvider } from '@gateway-fm/ups-react';
+import { UPSProvider } from '@gatewayfm/ups-react';
 import { TokenProvider } from './context/TokenContext';
 import { BalanceProviderWrapper } from './context/BalanceProviderWrapper';
 import App from './App';

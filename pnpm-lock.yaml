@@ -65,7 +65,7 @@ importers:
 
   examples/basic:
     dependencies:
-      '@gateway-fm/ups-sdk':
+      '@gatewayfm/ups-sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
       dotenv:
@@ -87,10 +87,10 @@ importers:
 
   examples/react-app:
     dependencies:
-      '@gateway-fm/ups-react':
+      '@gatewayfm/ups-react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@gateway-fm/ups-sdk':
+      '@gatewayfm/ups-sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
       '@tanstack/react-query':
@@ -124,10 +124,10 @@ importers:
 
   examples/react-escrow-app:
     dependencies:
-      '@gateway-fm/ups-react':
+      '@gatewayfm/ups-react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@gateway-fm/ups-sdk':
+      '@gatewayfm/ups-sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
       '@tanstack/react-query':
@@ -161,7 +161,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@gateway-fm/ups-sdk':
+      '@gatewayfm/ups-sdk':
         specifier: workspace:*
         version: link:../sdk
       '@tanstack/react-query':

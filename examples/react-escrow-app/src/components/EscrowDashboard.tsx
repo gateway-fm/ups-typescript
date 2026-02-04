@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useUPSClient, useWallet } from '@gateway-fm/ups-react';
-import { Escrow } from '@gateway-fm/ups-sdk';
+import { useUPSClient, useWallet } from '@gatewayfm/ups-react';
+import { Escrow } from '@gatewayfm/ups-sdk';
 
 export function EscrowDashboard() {
     const client = useUPSClient();

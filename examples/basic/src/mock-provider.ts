@@ -1,5 +1,5 @@
 import { LocalAccount } from 'viem/accounts';
-import { EIP1193Provider } from '@gateway-fm/ups-sdk';
+import { EIP1193Provider } from '@gatewayfm/ups-sdk';
 
 export function createMockProvider(account: LocalAccount): EIP1193Provider {
     return {

@@ -1,5 +1,5 @@
 {
-    "name": "@gateway-fm/ups-react",
+    "name": "@gatewayfm/ups-react",
     "version": "0.1.12",
     "description": "React hooks and providers for UPS x402 SDK",
     "main": "./dist/index.js",
@@ -31,12 +31,12 @@
     },
     "dependencies": {
         "zustand": "^5.0.10",
-        "@gateway-fm/ups-sdk": "workspace:*"
+        "@gatewayfm/ups-sdk": "workspace:*"
     },
     "peerDependencies": {
         "react": "^19.2.4",
         "@tanstack/react-query": "^5.0.0",
-        "@gateway-fm/ups-sdk": "workspace:*"
+        "@gatewayfm/ups-sdk": "workspace:*"
     },
     "devDependencies": {
         "react": "^19.2.4",

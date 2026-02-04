@@ -1,4 +1,4 @@
-import { useAccounts, useCurrentAccount } from '@gateway-fm/ups-react';
+import { useAccounts, useCurrentAccount } from '@gatewayfm/ups-react';
 
 export function AccountInfo() {
     const { data: accounts, isLoading } = useAccounts();

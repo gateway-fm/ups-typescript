@@ -1,4 +1,4 @@
-import { useAuth, useWallet } from '@gateway-fm/ups-react';
+import { useAuth, useWallet } from '@gatewayfm/ups-react';
 import { WalletConnect } from './components/WalletConnect';
 import { AccountCreation } from './components/AccountCreation';
 import { AccountList } from './components/AccountList';

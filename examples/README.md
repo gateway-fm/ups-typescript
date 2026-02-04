@@ -8,7 +8,7 @@ This directory contains examples demonstrating how to use the UPS SDK.
 A minimal TypeScript example running in Node.js. Demonstrates the core SDK usage for account creation and payments.
 
 ### 2. [React Example (Vite)](./react-app)
-A generic React application using `@gateway-fm/ups-react` hooks. Demonstrates wallet connection, authentication, and full account/payment flows in a UI.
+A generic React application using `@gatewayfm/ups-react` hooks. Demonstrates wallet connection, authentication, and full account/payment flows in a UI.
 
 ## Getting Started
 

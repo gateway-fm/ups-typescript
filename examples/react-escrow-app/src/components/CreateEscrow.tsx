@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { usePayment, useAccounts } from '@gateway-fm/ups-react';
+import { usePayment, useAccounts } from '@gatewayfm/ups-react';
 import { parseUnits, decodeEventLog } from 'viem';
-import { Account, PaymentType } from '@gateway-fm/ups-sdk';
+import { Account, PaymentType } from '@gatewayfm/ups-sdk';
 import { PAYMENT_TOKEN_ADDRESS, publicClient } from '../context/TokenContext';
 import { useBalances } from '../context/BalanceContext';
 

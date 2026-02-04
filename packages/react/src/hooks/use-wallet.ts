@@ -1,5 +1,5 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { type EIP1193Provider, type ConnectedWallet, type WalletState } from '@gateway-fm/ups-sdk';
+import { type EIP1193Provider, type ConnectedWallet, type WalletState } from '@gatewayfm/ups-sdk';
 import { useUPSStore } from '../store';
 import { useUPSClient } from '../provider';
 

@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react';
 import { formatUnits } from 'viem';
-import { useAccounts } from '@gateway-fm/ups-react';
-import type { Account } from '@gateway-fm/ups-sdk';
+import { useAccounts } from '@gatewayfm/ups-react';
+import type { Account } from '@gatewayfm/ups-sdk';
 import { publicClient, PAYMENT_TOKEN_ADDRESS, ERC20_ABI } from './TokenContext';
 
 interface BalanceContextValue {

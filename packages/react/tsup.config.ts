@@ -8,5 +8,5 @@ export default defineConfig({
     sourcemap: true,
     clean: true,
     treeshake: true,
-    external: ['react', '@gateway-fm/ups-sdk', '@tanstack/react-query'],
+    external: ['react', '@gatewayfm/ups-sdk', '@tanstack/react-query'],
 });

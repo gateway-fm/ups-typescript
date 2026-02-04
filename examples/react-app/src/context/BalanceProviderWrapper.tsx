@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect } from 'react';
 import { useToken } from './TokenContext';
 import { BalanceProvider, useBalances } from './BalanceContext';
-import { useAccounts } from '@gateway-fm/ups-react';
+import { useAccounts } from '@gatewayfm/ups-react';
 
 // Inner component to handle initial fetch
 function BalanceInitializer({ children }: { children: ReactNode }) {

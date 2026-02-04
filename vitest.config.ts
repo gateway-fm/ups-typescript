@@ -15,9 +15,9 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@gateway-fm/ups-sdk': path.resolve(__dirname, './packages/sdk/src/index.ts'),
-            '@gateway-fm/ups-react': path.resolve(__dirname, './packages/react/src/index.ts'),
-            '@gateway-fm/test-utils': path.resolve(__dirname, './packages/test-utils/src/index.ts'),
+            '@gatewayfm/ups-sdk': path.resolve(__dirname, './packages/sdk/src/index.ts'),
+            '@gatewayfm/ups-react': path.resolve(__dirname, './packages/react/src/index.ts'),
+            '@gatewayfm/test-utils': path.resolve(__dirname, './packages/test-utils/src/index.ts'),
         },
     },
 });
