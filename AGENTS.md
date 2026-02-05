@@ -302,7 +302,7 @@ e2e:      pnpm test:e2e (main branch only, requires secrets)
 | Secret | Purpose |
 | :--- | :--- |
 | `CODECOV_TOKEN` | Coverage upload |
-| `NPM_TOKEN` | npm publishing |
+| `NPM_JS_TOKEN_PUBLISH` | npm publishing |
 | `API_BASE_URL` | E2E API endpoint |
 | `BLOCKCHAIN_RPC_URL` | E2E blockchain RPC |
 | `BLOCKCHAIN_CHAIN_ID` | E2E chain ID |
@@ -464,4 +464,4 @@ pnpm lint -- --fix # Auto-fix where possible
 
 ---
 
-*Last updated: 2026-01-31*
+*Last updated: 2026-02-04*

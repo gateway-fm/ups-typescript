@@ -1,7 +1,7 @@
 # UPS x402 SDK
 
 [![CI](https://github.com/gateway-fm/ups-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/gateway-fm/ups-typescript/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/@gatewayfm%2Fsdk.svg)](https://www.npmjs.com/package/@gatewayfm/ups-sdk)
+[![npm version](https://badge.fury.io/js/@gatewayfm%2Fups-sdk.svg)](https://www.npmjs.com/package/@gatewayfm/ups-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 TypeScript SDK for the [x402 Universal Payments Protocol](https://x402.org) — enabling seamless blockchain payments with Smart Accounts.
