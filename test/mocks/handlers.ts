@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { mockAccount } from '../fixtures';
+import { mockAccount, mockEscrow, mockInvoice } from '../fixtures';
 
 export const handlers = [
     // Auth Handlers
@@ -141,6 +141,54 @@ export const handlers = [
             ],
             extensions: [],
             signers: {},
+        });
+    }),
+
+    // Escrow Handlers
+    http.get('*/x402/escrow/:id', ({ params }) => {
+        const { id } = params;
+        return HttpResponse.json({ ...mockEscrow, id });
+    }),
+
+    http.post('*/x402/escrow/:id/release', ({ params }) => {
+        // Return updated escrow with RELEASED status
+        return HttpResponse.json({ ...mockEscrow, id: params.id, status: 'RELEASED' });
+    }),
+
+    http.post('*/x402/escrow/:id/refund', ({ params }) => {
+        // Return updated escrow with REFUNDED status
+        return HttpResponse.json({ ...mockEscrow, id: params.id, status: 'REFUNDED' });
+    }),
+
+    // Invoice Handlers
+    http.get('*/invoices', () => {
+        return HttpResponse.json({
+            invoices: [mockInvoice],
+            next_page_token: ''
+        });
+    }),
+
+    http.get('*/invoices/:id', ({ params }) => {
+        const { id } = params;
+        return HttpResponse.json({
+            invoice: { ...mockInvoice, invoice_id: id as string }
+        });
+    }),
+
+    http.post('*/invoices', async ({ request }) => {
+        const body = await request.json() as any;
+        return HttpResponse.json({
+            invoice: {
+                ...mockInvoice,
+                ...body,
+                invoice_id: 'inv_' + Math.random().toString(36).substr(2, 9)
+            }
+        });
+    }),
+
+    http.post('*/invoices/:id/cancel', ({ params }) => {
+        return HttpResponse.json({
+            invoice: { ...mockInvoice, invoice_id: params.id as string, status: 'CANCELLED' }
         });
     }),
 

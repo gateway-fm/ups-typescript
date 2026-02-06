@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react';
+import { render, renderHook, waitFor } from '@testing-library/react';
+export { renderHook, waitFor };
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { UPSProvider, UPSConfig } from '../../packages/react/src';
 import React, { ReactElement, ReactNode } from 'react';

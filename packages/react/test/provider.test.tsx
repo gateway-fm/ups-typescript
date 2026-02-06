@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { UPSProvider, useUPSClient } from '../src/index';
+import { useUPSClient } from '../src/index';
 // Need to mock QueryClientProvider since UPSProvider uses it internally or expects it?
 // Based on task description, UPSProvider wraps children.
 // If UPSProvider expects a QueryClientProvider parent, we should check implementation.

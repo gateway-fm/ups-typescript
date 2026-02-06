@@ -173,6 +173,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/invoices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List invoices */
+        get: operations["listInvoices"];
+        put?: never;
+        /** Create new invoice */
+        post: operations["createInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/invoices/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get invoice by ID */
+        get: operations["getInvoice"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/invoices/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel invoice */
+        post: operations["cancelInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/x402/verify": {
         parameters: {
             query?: never;
@@ -370,7 +422,7 @@ export interface components {
             wallet_address?: string;
         };
         /** @enum {string} */
-        PaymentType: "UNSPECIFIED" | "DIRECT" | "ESCROW";
+        PaymentType: "UNSPECIFIED" | "DIRECT" | "ESCROW" | "INVOICE";
         PaymentExtra: {
             name?: string;
             version?: string;
@@ -382,6 +434,18 @@ export interface components {
              * @description Unix timestamp for release
              */
             release_time?: number;
+            /** @description Payee address (0x-prefixed) */
+            payee?: string;
+            /**
+             * Format: uint64
+             * @description Invoice ID if payment_type is INVOICE
+             */
+            invoice_id?: string;
+            /**
+             * @description Payment type for the invoice (DIRECT/ESCROW)
+             * @enum {string}
+             */
+            invoice_payment_type?: "DIRECT" | "ESCROW";
         };
         PaymentRequirements: {
             scheme?: string;
@@ -460,6 +524,41 @@ export interface components {
         Error: {
             code?: string;
             message?: string;
+        };
+        Invoice: {
+            /** Format: uint64 */
+            invoice_id?: string;
+            merchant?: string;
+            payer?: string;
+            amount?: string;
+            paid_amount?: string;
+            /** Format: int64 */
+            due_date?: number;
+            /** Format: int64 */
+            created_at?: number;
+            /** @enum {string} */
+            payment_type?: "DIRECT" | "ESCROW";
+            /** @enum {string} */
+            status?: "UNSPECIFIED" | "PENDING" | "PARTIALLY_PAID" | "PAID" | "CANCELLED" | "EXPIRED";
+            metadata_uri?: string;
+        };
+        CreateInvoiceRequest: {
+            /** @description 0x-prefixed Merchant address (optional, defaults to backend) */
+            merchant?: string;
+            amount: string;
+            payer?: string;
+            /** Format: int64 */
+            due_date: number;
+            /** @enum {string} */
+            payment_type: "DIRECT" | "ESCROW";
+            metadata_uri?: string;
+        };
+        InvoiceResponse: {
+            invoice?: components["schemas"]["Invoice"];
+        };
+        InvoiceListResponse: {
+            invoices?: components["schemas"]["Invoice"][];
+            next_page_token?: string;
         };
     };
     responses: never;
@@ -806,6 +905,166 @@ export interface operations {
             };
             /** @description Unauthorized */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listInvoices: {
+        parameters: {
+            query?: {
+                /** @description Filter by merchant address (0x-prefixed) */
+                merchant?: string;
+                /** @description Filter by payer address (0x-prefixed) */
+                payer?: string;
+                page_size?: number;
+                page_token?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of invoices */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceListResponse"];
+                };
+            };
+            /** @description Invalid parameters */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createInvoice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateInvoiceRequest"];
+            };
+        };
+        responses: {
+            /** @description Invoice created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceResponse"];
+                };
+            };
+            /** @description Invalid input */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getInvoice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Invoice ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invoice details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceResponse"];
+                };
+            };
+            /** @description Invoice not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    cancelInvoice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Invoice ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invoice cancelled */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Forbidden (Not invoice creator) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Invoice not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

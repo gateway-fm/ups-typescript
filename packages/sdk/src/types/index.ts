@@ -39,8 +39,8 @@ export interface ConnectResult {
 // Wallet
 export type EIP1193Provider = {
     request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-    on?: (event: string, handler: (...args: any[]) => void) => void;
-    removeListener?: (event: string, handler: (...args: any[]) => void) => void;
+    on?: (event: string, handler: (...args: unknown[]) => void) => void;
+    removeListener?: (event: string, handler: (...args: unknown[]) => void) => void;
 };
 
 export interface WalletState {
@@ -98,7 +98,8 @@ export interface PaymentRequirements {
 export enum PaymentType {
     UNSPECIFIED = 'UNSPECIFIED',
     DIRECT = 'DIRECT',
-    ESCROW = 'ESCROW'
+    ESCROW = 'ESCROW',
+    INVOICE = 'INVOICE'
 }
 
 export interface PaymentExtra {
@@ -108,6 +109,8 @@ export interface PaymentExtra {
     arbiter?: string;
     release_time?: number; // snake_case from API
     payee?: string; // intended recipient for escrow
+    invoice_id?: string;
+    invoice_payment_type?: 'DIRECT' | 'ESCROW';
 }
 
 export interface PaymentAuthorization {
@@ -190,4 +193,36 @@ export interface EscrowActionResponse {
     network?: string;
 }
 
+// Invoices
+export type InvoiceStatus = 'UNSPECIFIED' | 'PENDING' | 'PARTIALLY_PAID' | 'PAID' | 'CANCELLED' | 'EXPIRED';
 
+export interface Invoice {
+    invoice_id: string;
+    merchant: string;
+    payer: string;
+    amount: string;
+    paid_amount: string;
+    due_date: number;
+    created_at: number;
+    payment_type: 'DIRECT' | 'ESCROW';
+    status: InvoiceStatus;
+    metadata_uri: string;
+}
+
+export interface CreateInvoiceRequest {
+    merchant?: string;
+    amount: string;
+    payer?: string;
+    due_date: number;
+    payment_type: 'DIRECT' | 'ESCROW';
+    metadata_uri: string;
+}
+
+export interface InvoiceResponse {
+    invoice: Invoice;
+}
+
+export interface InvoiceListResponse {
+    invoices: Invoice[];
+    next_page_token: string;
+}

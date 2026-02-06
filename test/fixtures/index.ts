@@ -1,4 +1,4 @@
-import { Account, PaymentRequirements } from '@x402-ups/sdk';
+import { Account, PaymentRequirements, Escrow, Invoice } from '@gatewayfm/ups-sdk';
 
 export const mockAccount: Account = {
     id: 'acc_123',
@@ -19,4 +19,29 @@ export const mockPaymentRequirements: PaymentRequirements = {
     payTo: '0xmerchantaddress12345678901234567890',
     maxTimeoutSeconds: 3600,
     extra: { name: 'x402 Payment Token', version: '1' },
+};
+
+export const mockEscrow: Escrow = {
+    id: 'esc_123',
+    invoice_id: 'inv_123',
+    account_id: 'acc_123',
+    amount: '100',
+    currency: 'USDT',
+    status: 'ACTIVE',
+    created_at: 1234567800,
+    updated_at: 1234567800,
+    transaction_hash: '0x123...'
+};
+
+export const mockInvoice: Invoice = {
+    invoice_id: 'inv_123',
+    merchant: '0x123',
+    payer: '0x456',
+    amount: '100',
+    paid_amount: '0',
+    due_date: 1234567890,
+    created_at: 1234567800,
+    payment_type: 'DIRECT',
+    status: 'PENDING',
+    metadata_uri: 'ipfs://Qm...'
 };

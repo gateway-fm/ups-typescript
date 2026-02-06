@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HttpClient } from '../src/core/http-client';
-import { AuthError, NetworkError, RateLimitError } from '../src/core/errors';
+import { AuthError } from '../src/core/errors';
 import { server } from '../../../test/mocks/server';
-import { http, HttpResponse, delay } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 describe('HttpClient', () => {
     let client: HttpClient;
@@ -74,22 +74,73 @@ describe('HttpClient', () => {
         expect(attempts).toBe(2);
     });
 
-    it.skip('should throw NetworkError on timeout', async () => {
-        // Mock a timeout or network error
-        server.use(
-            http.get(`${baseUrl}/timeout`, async () => {
-                await delay(200); // Simulate delay
-                return HttpResponse.json({ ok: true });
-            })
-        );
+    it('should throw NetworkError on timeout', async () => {
+        // Mock fetch to simulate timeout (AbortError)
+        const fetchSpy = vi.spyOn(global, 'fetch').mockImplementation(async (url, options: RequestInit | undefined) => {
+            const signal = options?.signal;
+            return new Promise((resolve, reject) => {
+                if (signal?.aborted) {
+                    const error = new Error('The operation was aborted');
+                    error.name = 'AbortError';
+                    return reject(error);
+                }
 
-        // Create client with short timeout
-        const quickClient = new HttpClient({
-            baseUrl,
-            timeout: 50,
-            retryAttempts: 0
+                const timeoutId = setTimeout(() => {
+                    resolve(new Response(JSON.stringify({ ok: true })));
+                }, 200);
+
+                if (signal) {
+                    signal.addEventListener('abort', () => {
+                        clearTimeout(timeoutId);
+                        const error = new Error('The operation was aborted');
+                        error.name = 'AbortError';
+                        reject(error);
+                    });
+                }
+            });
         });
 
-        await expect(quickClient.get('/timeout')).rejects.toThrow(NetworkError);
+        try {
+            // Create client with short timeout
+            const quickClient = new HttpClient({
+                baseUrl,
+                timeout: 50,
+                retryAttempts: 0
+            });
+
+            await expect(quickClient.get('/timeout')).rejects.toThrow('Request timed out');
+        } finally {
+            fetchSpy.mockRestore();
+        }
+    });
+
+    it('should handle 204 No Content', async () => {
+        server.use(
+            http.post(`${baseUrl}/204`, () => {
+                return new HttpResponse(null, { status: 204 });
+            })
+        );
+        const response = await client.post('/204');
+        expect(response).toBeUndefined();
+    });
+
+    it('should handle non-JSON error response', async () => {
+        const noRetryClient = new HttpClient({ baseUrl, retryAttempts: 0, timeout: 50 });
+        server.use(
+            http.get(`${baseUrl}/500-text`, () => {
+                return new HttpResponse('Internal Server Error', { status: 500 });
+            })
+        );
+        await expect(noRetryClient.get('/500-text')).rejects.toThrow('Internal Server Error');
+    });
+
+    it('should handle JSON error response', async () => {
+        const noRetryClient = new HttpClient({ baseUrl, retryAttempts: 0, timeout: 50 });
+        server.use(
+            http.get(`${baseUrl}/400-json`, () => {
+                return HttpResponse.json({ code: 'INVALID', message: 'Bad Request' }, { status: 400 });
+            })
+        );
+        await expect(noRetryClient.get('/400-json')).rejects.toThrow('Bad Request');
     });
 });

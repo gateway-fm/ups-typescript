@@ -33,7 +33,9 @@ UPSclient/
 │   └── test-utils/             # @gatewayfm/test-utils - Testing utilities
 ├── examples/
 │   ├── basic/                  # Node.js example
-│   └── react-app/              # React/Vite example
+│   ├── react-app/              # React/Vite example
+│   ├── react-invoice-app/      # Invoice Management example
+│   └── react-escrow-app/       # Escrow Payment example
 ├── .github/workflows/          # CI/CD workflows
 ├── test/                       # Root test configuration
 ├── vitest.config.ts            # Test configuration
@@ -77,6 +79,7 @@ console.log(result.isNewUser); // true if new user was created
 client.wallet   // WalletModule
 client.account  // AccountModule
 client.payment  // PaymentModule
+client.invoice  // InvoiceModule
 client.user     // UserModule (new)
 client.auth     // AuthManager
 ```
@@ -121,7 +124,18 @@ client.auth     // AuthManager
 | `encodePaymentHeader` | `(signed, requirements) => string` | Encode as `x402` HTTP header |
 | `verify` | `(signed, requirements) => Promise<VerifyResponse>` | Verify payment with backend |
 | `settle` | `(signed, requirements) => Promise<SettleResponse>` | Settle payment on-chain |
+| `settle` | `(signed, requirements) => Promise<SettleResponse>` | Settle payment on-chain |
 | `getSupportedSchemes` | `() => Promise<SupportedSchemesResponse>` | Get supported payment schemes from facilitator |
+| `payInvoice` | `(invoice, params) => Promise<SettleResponse>` | Wrapper for paying invoices, auto-injects metadata |
+
+#### `InvoiceModule` (`packages/sdk/src/invoice/index.ts`) [NEW]
+
+| Method | Signature | Description |
+| :--- | :--- | :--- |
+| `create` | `(request) => Promise<InvoiceResponse>` | Create new invoice |
+| `get` | `(id) => Promise<InvoiceResponse>` | Get invoice by ID |
+| `list` | `(params?) => Promise<InvoiceListResponse>` | List invoices |
+| `cancel` | `(id) => Promise<InvoiceResponse>` | Cancel invoice |
 
 #### `UserModule` (`packages/sdk/src/user/index.ts`) [NEW]
 
@@ -205,7 +219,10 @@ function App() {
 | `useWallet` | `{ connect, disconnect, state, ... }` | Wallet operations |
 | `useAuth` | `{ isAuthenticated, authenticate, ... }` | Authentication state & actions |
 | `useAccount` | `{ accounts, createAccount, ... }` | Account management with TanStack Query |
+| `useAccount` | `{ accounts, createAccount, ... }` | Account management with TanStack Query |
 | `usePayment` | `{ pay, isPaying, ... }` | Payment execution |
+| `usePayInvoice` | `{ payInvoice, ... }` | Specialized hook for invoice payments |
+| `useInvoice` | `{ createInvoice, invoices, ... }` | Invoice management |
 
 ### 4.3 State Management
 

@@ -159,6 +159,43 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1(@types/node@25.1.0)(tsx@4.21.0)
 
+  examples/react-invoice-app:
+    dependencies:
+      '@gatewayfm/ups-react':
+        specifier: workspace:*
+        version: link:../../packages/react
+      '@gatewayfm/ups-sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
+      '@tanstack/react-query':
+        specifier: ^5.50.0
+        version: 5.90.20(react@19.2.4)
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.4
+        version: 19.2.4(react@19.2.4)
+      viem:
+        specifier: ^2.21.0
+        version: 2.45.1(typescript@5.9.3)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.10
+        version: 19.2.10
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.10)
+      '@vitejs/plugin-react':
+        specifier: ^5.1.2
+        version: 5.1.2(vite@7.3.1(@types/node@25.1.0)(tsx@4.21.0))
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+      vite:
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@25.1.0)(tsx@4.21.0)
+
   packages/react:
     dependencies:
       '@gatewayfm/ups-sdk':

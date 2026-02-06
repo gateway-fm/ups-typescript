@@ -20,7 +20,7 @@ export class HttpClient {
     constructor(config: HttpClientConfig) {
         this.baseUrl = config.baseUrl.replace(/\/$/, '');
         this.timeout = config.timeout || 30000;
-        this.retryAttempts = config.retryAttempts || 3;
+        this.retryAttempts = config.retryAttempts ?? 3;
         this.getToken = config.getToken;
     }
 
@@ -88,18 +88,20 @@ export class HttpClient {
                 } finally {
                     clearTimeout(timeoutId);
                 }
-            } catch (error: any) {
-                lastError = error;
+            } catch (error: unknown) {
+                lastError = error as Error;
 
                 if (error instanceof AuthError) {
                     throw error;
                 }
 
-                if (error.name === 'AbortError') {
-                    lastError = new NetworkError('Request timed out', error);
-                } else if (!(error instanceof NetworkError) && !(error instanceof UPSError)) {
+                const e = error as Error;
+
+                if (e.name === 'AbortError') {
+                    lastError = new NetworkError('Request timed out', e);
+                } else if (!(e instanceof NetworkError) && !(e instanceof UPSError)) {
                     // Wrap unknown errors
-                    lastError = new NetworkError(error.message || 'Unknown error', error);
+                    lastError = new NetworkError(e.message || 'Unknown error', e);
                 }
 
                 if (attempt < this.retryAttempts) {

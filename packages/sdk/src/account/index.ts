@@ -5,7 +5,7 @@ export class AccountModule {
     constructor(private http: HttpClient) { }
 
     async get(id: string): Promise<Account> {
-        const response = await this.http.get<{ account: any }>(`/accounts/${id}`);
+        const response = await this.http.get<{ account: unknown }>(`/accounts/${id}`);
         return this.mapAccount(response.account);
     }
 
@@ -24,7 +24,7 @@ export class AccountModule {
     }
 
     async list(): Promise<Account[]> {
-        const response = await this.http.get<{ accounts: any[] }>('/accounts');
+        const response = await this.http.get<{ accounts: unknown[] }>('/accounts');
         return response.accounts.map(this.mapAccount);
     }
 
@@ -50,15 +50,16 @@ export class AccountModule {
 
     private mapAccount(data: any): Account {
         // Map snake_case to camelCase
+        const d = data as any;
         return {
-            id: data.id,
-            ownerAddress: data.owner_address,
-            walletAddress: data.wallet_address,
-            status: data.status,
-            kycLevel: data.kyc_level ?? 0,
-            userId: data.user_id,
-            createdAt: data.created_at,
-            updatedAt: data.updated_at,
+            id: d.id,
+            ownerAddress: d.owner_address,
+            walletAddress: d.wallet_address,
+            status: d.status,
+            kycLevel: d.kyc_level ?? 0,
+            userId: d.user_id,
+            createdAt: d.created_at,
+            updatedAt: d.updated_at,
         };
     }
 }

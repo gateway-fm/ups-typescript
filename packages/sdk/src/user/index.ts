@@ -18,16 +18,17 @@ export class UserModule {
      * Requires authentication.
      */
     async getCurrentUser(): Promise<User> {
-        const response = await this.http.get<{ user: any }>('/users/me');
+        const response = await this.http.get<{ user: unknown }>('/users/me');
         return this.mapUser(response.user);
     }
 
     private mapUser(data: any): User {
+        const d = data as any;
         return {
-            id: data.id,
-            walletAddress: data.wallet_address,
-            status: data.status,
-            createdAt: data.created_at,
+            id: d.id,
+            walletAddress: d.wallet_address,
+            status: d.status,
+            createdAt: d.created_at,
         };
     }
 }

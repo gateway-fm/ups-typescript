@@ -96,7 +96,10 @@ function PaymentFlow() {
 See the [`examples/`](./examples) directory:
 
 - **[Basic Node.js](./examples/basic)** — Standalone TypeScript example
+- **[Basic Node.js](./examples/basic)** — Standalone TypeScript example
 - **[React + Vite](./examples/react-app)** — Full React application
+- **[React Invoice](./examples/react-invoice-app)** — Invoice Management application
+- **[React Escrow](./examples/react-escrow-app)** — Escrow Payment application
 
 ```bash
 # Run the basic example
@@ -129,6 +132,13 @@ await client.account.predictAddress(p);  // Predict future address
 await client.payment.pay({ requirements, from });  // Full payment flow
 await client.payment.verify(signed, requirements); // Verify before settling
 await client.payment.settle(signed, requirements); // Settle on-chain
+await client.payment.payInvoice(invoice, { amount, asset, network });
+```
+
+**`client.invoice`** — Invoice operations
+```typescript
+await client.invoice.create({ amount, due_date, ... });
+await client.invoice.list({ merchant: '0x...' });
 ```
 
 ### React Hooks
@@ -138,7 +148,9 @@ await client.payment.settle(signed, requirements); // Settle on-chain
 | `useWallet()` | Wallet connection, address, chain ID |
 | `useAuth()` | Authentication state and actions |
 | `useAccount()` | Account CRUD with query caching |
+| `useAccount()` | Account CRUD with query caching |
 | `usePayment()` | Payment execution with loading states |
+| `useInvoice()` | Invoice management hooks |
 | `useUPSClient()` | Direct SDK client access |
 
 ## Development

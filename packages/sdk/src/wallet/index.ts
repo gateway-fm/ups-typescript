@@ -53,11 +53,12 @@ export class WalletModule {
                 chainId,
                 provider,
             };
-        } catch (error: any) {
-            if (error.code === 4001) {
+        } catch (error: unknown) {
+            const e = error as { code?: number; message?: string };
+            if (e.code === 4001) {
                 throw new WalletError('User rejected connection');
             }
-            throw new WalletError(`Connection failed: ${error.message}`, error);
+            throw new WalletError(`Connection failed: ${e.message || 'Unknown error'}`, error as Error);
         }
     }
 
@@ -100,9 +101,10 @@ export class WalletModule {
                 account: this._state.address as `0x${string}`,
                 message,
             });
-        } catch (error: any) {
-            if (error.code === 4001) throw new WalletError('User rejected signing');
-            throw new WalletError(`Sign message failed: ${error.message}`, error);
+        } catch (error: unknown) {
+            const e = error as { code?: number; message?: string };
+            if (e.code === 4001) throw new WalletError('User rejected signing');
+            throw new WalletError(`Sign message failed: ${e.message || 'Unknown error'}`, error as Error);
         }
     }
 
@@ -119,9 +121,10 @@ export class WalletModule {
                 primaryType: typedData.primaryType,
                 message: typedData.message,
             });
-        } catch (error: any) {
-            if (error.code === 4001) throw new WalletError('User rejected signing');
-            throw new WalletError(`Sign typed data failed: ${error.message}`, error);
+        } catch (error: unknown) {
+            const e = error as { code?: number; message?: string };
+            if (e.code === 4001) throw new WalletError('User rejected signing');
+            throw new WalletError(`Sign typed data failed: ${e.message || 'Unknown error'}`, error as Error);
         }
     }
 
@@ -132,22 +135,19 @@ export class WalletModule {
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: `0x${chainId.toString(16)}` }],
             });
-        } catch (error: any) {
-            throw new WalletError(`Switch chain failed: ${error.message}`, error);
+        } catch (error: unknown) {
+            throw new WalletError(`Switch chain failed: ${(error as Error).message}`, error as Error);
         }
     }
 
     onStateChange(callback: (state: WalletState) => void): () => void {
-        const unsub1 = this.eventBus.on('wallet:connected', () => callback(this._state));
-        // subscribe to other events if needed, or just general updates
-        // The requirement says "onStateChange(callback): Unsubscribe".
-        // We can emit a generic 'wallet:stateChanged' internal event
+        const unsub1 = this.eventBus.on('wallet:stateChanged', () => callback(this._state));
         return unsub1;
     }
 
     private updateState(newState: WalletState) {
         this._state = newState;
-        // We could emit a generic event here too used by onStateChange
+        this.eventBus.emit('wallet:stateChanged', this._state);
     }
 
     private setupListeners(provider: EIP1193Provider) {

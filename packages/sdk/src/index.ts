@@ -10,4 +10,5 @@ export { WalletModule } from './wallet';
 export { AccountModule } from './account';
 export { PaymentModule } from './payment';
 export { EscrowModule } from './escrow';
+export { InvoiceModule } from './invoice';
 export { UserModule } from './user';

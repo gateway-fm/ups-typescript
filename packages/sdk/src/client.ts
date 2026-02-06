@@ -5,6 +5,7 @@ import { WalletModule } from './wallet';
 import { AccountModule } from './account';
 import { PaymentModule } from './payment';
 import { EscrowModule } from './escrow';
+import { InvoiceModule } from './invoice';
 import { UserModule } from './user';
 import { UPSConfig, ConnectedWallet, EIP1193Provider, ConnectResult } from './types';
 import { WalletError } from './core/errors';
@@ -16,6 +17,7 @@ export class UPSClient {
     readonly account: AccountModule;
     readonly payment: PaymentModule;
     readonly escrow: EscrowModule;
+    readonly invoice: InvoiceModule;
     readonly user: UserModule;
 
     private http: HttpClient;
@@ -43,6 +45,7 @@ export class UPSClient {
         this.account = new AccountModule(this.http);
         this.payment = new PaymentModule(this.http, this.wallet);
         this.escrow = new EscrowModule(this.http);
+        this.invoice = new InvoiceModule(this.http);
         this.user = new UserModule(this.http);
     }
 
@@ -87,9 +90,12 @@ export class UPSClient {
         try {
             const signature = await this.wallet.signMessage(loginMessage);
             await this.auth.login(address, loginMessage, signature);
-        } catch (error: any) {
+        } catch (error: unknown) {
             // If related to "User not found" or 404/401/400, try Register
-            const isAuthError = error.status === 404 || error.status === 401 || error.status === 400 || error.message?.includes('not found') || error.details?.message?.includes('not found');
+            const e = error as any; // Cast to any to check specific properties safely
+            const isAuthError = e.status === 404 || e.status === 401 || e.status === 400 ||
+                e.message?.includes?.('not found') ||
+                e.details?.message?.includes?.('not found');
 
             if (isAuthError) {
                 const registerMessage = `Register for UPSx402`;

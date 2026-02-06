@@ -29,7 +29,7 @@ export class AuthManager {
      * This is the preferred authentication method.
      */
     async connect(walletAddress: string, message: string, signature: string): Promise<ConnectResult> {
-        const result = await this.http.post<any>('/auth/connect', {
+        const result = await this.http.post<{ user: unknown; token: string; expires_at: string; is_new_user?: boolean }>('/auth/connect', {
             wallet_address: walletAddress,
             message,
             signature,
@@ -50,7 +50,7 @@ export class AuthManager {
      * @deprecated Use connect() instead
      */
     async login(walletAddress: string, message: string, signature: string): Promise<AuthResult> {
-        const result = await this.http.post<any>('/auth/login', {
+        const result = await this.http.post<{ token: string; expires_at?: string; expiresAt?: string }>('/auth/login', {
             wallet_address: walletAddress,
             message,
             signature,
@@ -69,7 +69,7 @@ export class AuthManager {
      * @deprecated Use connect() instead
      */
     async register(walletAddress: string, message: string, signature: string): Promise<AuthResult> {
-        const result = await this.http.post<any>('/auth/register', {
+        const result = await this.http.post<{ token: string; expires_at?: string; expiresAt?: string }>('/auth/register', {
             wallet_address: walletAddress,
             message,
             signature,
@@ -114,11 +114,12 @@ export class AuthManager {
     }
 
     private mapUser(data: any): User {
+        const d = data as any;
         return {
-            id: data.id,
-            walletAddress: data.wallet_address,
-            status: data.status,
-            createdAt: data.created_at,
+            id: d.id,
+            walletAddress: d.wallet_address,
+            status: d.status,
+            createdAt: d.created_at,
         };
     }
 

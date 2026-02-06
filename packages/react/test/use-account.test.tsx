@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { useAccounts, useAccount, useCreateAccount, usePredictAddress } from '../src/hooks/use-account';
+import { useAccounts, useAccount, useCreateAccount } from '../src/hooks/use-account';
 import { createWrapper } from '../../../test/utils/render';
 import { useUPSStore } from '../src/store';
-import { server } from '../../../test/mocks/server';
 
 describe('useAccounts', () => {
     beforeEach(() => {

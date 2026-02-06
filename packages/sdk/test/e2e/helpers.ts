@@ -1,4 +1,4 @@
-import { createWalletClient, http, parseEther, createPublicClient, formatUnits, hexToBytes } from 'viem';
+import { createWalletClient, http, createPublicClient } from 'viem';
 import { privateKeyToAccount, generatePrivateKey } from 'viem/accounts';
 import { defineChain } from 'viem';
 import { config } from './setup';
@@ -60,7 +60,7 @@ export function createProviderFromPrivateKey(privateKey: `0x${string}`) {
                 return `0x${chain.id.toString(16)}`;
             }
             if (method === 'personal_sign') {
-                const [message, address] = params as [string, string];
+                const [message] = params as [string, string];
                 // viem expects { message: { raw: hex } } or string
                 // If message is hex, we might need to parse it?
                 // account.signMessage expects { message }. If hex string is passed, it treats as string unless formatted?
@@ -70,7 +70,7 @@ export function createProviderFromPrivateKey(privateKey: `0x${string}`) {
                 return account.signMessage({ message: { raw: message as `0x${string}` } });
             }
             if (method === 'eth_signTypedData_v4') {
-                const [address, dataStr] = params as [string, string];
+                const [, dataStr] = params as [string, string];
                 const data = JSON.parse(dataStr);
                 return account.signTypedData({
                     domain: data.domain,

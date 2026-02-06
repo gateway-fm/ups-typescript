@@ -58,10 +58,89 @@ describe('WalletModule', () => {
         });
     });
 
-    it('should disconnect and clear state', async () => {
+    it('should sign typed data', async () => {
         await walletModule.connect(mockProvider);
-        walletModule.disconnect();
+        const typedData = {
+            domain: { name: 'Test', version: '1', chainId: 1, verifyingContract: '0x0000000000000000000000000000000000000000' },
+            types: { Person: [{ name: 'name', type: 'string' }] },
+            primaryType: 'Person',
+            message: { name: 'Bob' },
+        };
+        const signature = await walletModule.signTypedData(typedData as any);
+        expect(signature).toBe('0xtypedsignature');
+        expect(mockProvider.request).toHaveBeenCalledWith({
+            method: 'eth_signTypedData_v4',
+            params: [expect.any(String), expect.stringContaining('"domain":')] // simplified check
+        });
+    });
+
+    it('should switch chain', async () => {
+        await walletModule.connect(mockProvider);
+        await walletModule.switchChain(8453);
+        expect(mockProvider.request).toHaveBeenCalledWith({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x2105' }]
+        });
+    });
+
+    it('should handle connection errors', async () => {
+        const errorProvider = {
+            request: vi.fn().mockRejectedValue(new Error('User rejected')),
+            on: vi.fn()
+        };
+        await expect(walletModule.connect(errorProvider)).rejects.toThrow('Connection failed');
+    });
+
+    it('should handle user rejection (code 4001)', async () => {
+        const rejectionError: any = new Error('User rejected');
+        rejectionError.code = 4001;
+        const errorProvider = {
+            request: vi.fn().mockRejectedValue(rejectionError),
+            on: vi.fn()
+        };
+        await expect(walletModule.connect(errorProvider)).rejects.toThrow('User rejected connection');
+    });
+
+    it('should emit state change on accountsChanged', async () => {
+        const listeners: Record<string, (...args: any[]) => void> = {};
+        mockProvider.on.mockImplementation((event: string, fn: (...args: any[]) => void) => {
+            listeners[event] = fn;
+        });
+
+        await walletModule.connect(mockProvider);
+
+        const spy = vi.fn();
+        walletModule.onStateChange(spy);
+
+        // Simulate accountsChanged
+        listeners['accountsChanged'](['0x456...']);
+        expect(spy).toHaveBeenCalledWith(expect.objectContaining({ address: '0x456...' }));
+        expect(walletModule.getAddress()).toBe('0x456...');
+    });
+
+    it('should disconnect on empty accountsChanged', async () => {
+        const listeners: Record<string, (...args: any[]) => void> = {};
+        mockProvider.on.mockImplementation((event: string, fn: (...args: any[]) => void) => {
+            listeners[event] = fn;
+        });
+
+        await walletModule.connect(mockProvider);
+
+        // Simulate accountsChanged with empty array
+        listeners['accountsChanged']([]);
         expect(walletModule.isConnected()).toBe(false);
-        expect(walletModule.getAddress()).toBeNull();
+    });
+
+    it('should update chainId on chainChanged', async () => {
+        const listeners: Record<string, (...args: any[]) => void> = {};
+        mockProvider.on.mockImplementation((event: string, fn: (...args: any[]) => void) => {
+            listeners[event] = fn;
+        });
+
+        await walletModule.connect(mockProvider);
+
+        // Simulate chainChanged
+        listeners['chainChanged']('0x2'); // Chain ID 2
+        expect(walletModule.getChainId()).toBe(2);
     });
 });

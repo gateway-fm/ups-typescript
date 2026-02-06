@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { AccountModule } from '../src/account/index';
 import { HttpClient } from '../src/core/http-client';
 import { mockAccount } from '../../../test/fixtures';
@@ -34,5 +34,14 @@ describe('AccountModule', () => {
         const result = await accountModule.list();
         expect(result).toHaveLength(1);
         expect(result[0]).toEqual(mockAccount);
+    });
+
+    it('should get account by wallet address', async () => {
+        const result = await accountModule.getByWallet(mockAccount.walletAddress);
+        expect(result).toEqual(mockAccount);
+    });
+
+    it('should throw if account by wallet not found', async () => {
+        await expect(accountModule.getByWallet('0xnotFound')).rejects.toThrow('Account not found for wallet');
     });
 });

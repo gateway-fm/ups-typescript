@@ -7,7 +7,9 @@ import {
     VerifyResponse,
     SettleResponse,
     SupportedSchemesResponse,
-    EIP712TypedData
+    EIP712TypedData,
+    Invoice,
+    PaymentType
 } from '../types';
 import { PaymentError } from '../core/errors';
 
@@ -36,6 +38,43 @@ export class PaymentModule {
         }
 
         return this.settle(signed, requirementsWithFrom);
+    }
+
+    /**
+     * Pay an invoice
+     * @param invoice The invoice to pay
+     * @param params Payment parameters (amount, asset, network)
+     */
+    async payInvoice(invoice: Invoice, params: {
+        amount: string; // Atomic units
+        asset: string;
+        network: string;
+        payTo?: string; // Defaults to invoice.merchant
+        from?: string;  // Payer Smart Account address
+    }): Promise<SettleResponse> {
+        const payTo = params.payTo || invoice.merchant;
+        if (!payTo) throw new PaymentError('No payee address (merchant) available for invoice');
+
+        const requirements: PaymentRequirements = {
+            scheme: 'exact',
+            network: params.network,
+            maxAmountRequired: params.amount,
+            asset: params.asset,
+            payTo,
+            maxTimeoutSeconds: 3600,
+            extra: {
+                name: 'x402 Payment Token',
+                version: '1',
+                payment_type: PaymentType.INVOICE,
+                invoice_id: invoice.invoice_id,
+                invoice_payment_type: invoice.payment_type
+            }
+        };
+
+        return this.pay({
+            requirements,
+            from: params.from
+        });
     }
 
     buildAuthorization(requirements: PaymentRequirements, from: string): PaymentAuthorization {

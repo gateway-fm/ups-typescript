@@ -3,7 +3,8 @@ import {
     type PaymentRequirements,
     type SignedAuthorization,
     type VerifyResponse,
-    type SettleResponse
+    type SettleResponse,
+    type Invoice
 } from '@gatewayfm/ups-sdk';
 import { useUPSClient } from '../provider';
 
@@ -80,5 +81,41 @@ export function usePaymentSettle(): UsePaymentSettleReturn {
         settle: (signed, requirements) => mutation.mutateAsync({ signed, requirements }),
         isPending: mutation.isPending,
         error: mutation.error,
+    };
+}
+
+export interface UsePayInvoiceParams {
+    invoice: Invoice;
+    paymentParams: {
+        amount: string;
+        asset: string;
+        network: string;
+        payTo?: string;
+        from?: string;
+    };
+}
+
+export interface UsePayInvoiceReturn {
+    payInvoice: (params: UsePayInvoiceParams) => Promise<SettleResponse>;
+    isPending: boolean;
+    error: Error | null;
+    data: SettleResponse | undefined;
+}
+
+export function usePayInvoice(): UsePayInvoiceReturn {
+    const client = useUPSClient();
+
+    const mutation = useMutation({
+        mutationFn: (params: UsePayInvoiceParams) => client.payment.payInvoice(
+            params.invoice,
+            params.paymentParams
+        ),
+    });
+
+    return {
+        payInvoice: mutation.mutateAsync,
+        isPending: mutation.isPending,
+        error: mutation.error,
+        data: mutation.data,
     };
 }
