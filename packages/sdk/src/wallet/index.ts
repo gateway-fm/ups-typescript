@@ -153,7 +153,8 @@ export class WalletModule {
     private setupListeners(provider: EIP1193Provider) {
         if (!provider.on) return;
 
-        provider.on('accountsChanged', (accounts: string[]) => {
+        provider.on('accountsChanged', (...args: unknown[]) => {
+            const accounts = args[0] as string[];
             if (accounts.length === 0) {
                 this.disconnect();
             } else {
@@ -162,7 +163,8 @@ export class WalletModule {
             }
         });
 
-        provider.on('chainChanged', (chainId: string) => {
+        provider.on('chainChanged', (...args: unknown[]) => {
+            const chainId = args[0] as string;
             const id = parseInt(chainId, 16);
             this.updateState({ ...this._state, chainId: id });
             // Update client chain if possible or recreate?

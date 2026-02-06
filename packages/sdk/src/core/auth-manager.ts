@@ -58,7 +58,7 @@ export class AuthManager {
 
         const authResult: AuthResult = {
             token: result.token,
-            expiresAt: result.expires_at || result.expiresAt,
+            expiresAt: result.expires_at || result.expiresAt || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         };
 
         this.handleAuthSuccess(authResult, walletAddress);
