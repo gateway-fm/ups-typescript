@@ -105,5 +105,21 @@ describe('PaymentModule', () => {
             expect(result.isValid).toBe(false);
             expect(result.invalidReason).toBe("Signature invalid");
         });
+
+        it('should NOT throw when settle returns success: true even if errorReason is present', async () => {
+            const mockResponse = {
+                "success": true,
+                "errorReason": "Settled",
+                "transaction": "0x9e75d425848d216a4f248b5c331755eefe519f89fad64f22db9bad3f8d6d0cb6",
+                "network": "eip155:737998412",
+                "payer": "0x6726dd6e41f3bdfd66e4dea0b9d43e3fb46c7425"
+            };
+
+            vi.spyOn(httpClient, 'post').mockResolvedValue(mockResponse);
+
+            await expect(paymentModule.settle(mockSignedAuth, mockPaymentRequirements))
+                .resolves
+                .toEqual(mockResponse);
+        });
     });
 });

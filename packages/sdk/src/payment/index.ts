@@ -196,7 +196,7 @@ export class PaymentModule {
             paymentRequirements: requirements
         }, { skipAuth: true });
 
-        if (response.success === false || response.errorReason) {
+        if (response.success === false || (response.success === undefined && response.errorReason)) {
             throw new PaymentError(response.errorReason || 'Payment settlement failed');
         }
 
