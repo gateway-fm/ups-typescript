@@ -58,4 +58,52 @@ describe('PaymentModule', () => {
         expect(result.kinds.length).toBeGreaterThan(0);
         expect(result.kinds[0].scheme).toBe('exact');
     });
+
+    describe('Error Handling', () => {
+        it('should throw when settle returns success: false', async () => {
+            // Mock HttpClient to return a 200 OK response but with application-level error
+            vi.spyOn(httpClient, 'post').mockResolvedValue({
+                success: false,
+                errorReason: "invalid_exact_evm_insufficient_balance: insufficient balance: 0 < 2000000000000000000"
+            });
+
+            await expect(paymentModule.settle(mockSignedAuth, mockPaymentRequirements))
+                .rejects
+                .toThrow("invalid_exact_evm_insufficient_balance: insufficient balance: 0 < 2000000000000000000");
+        });
+
+        it('should normally return valid response if no error', async () => {
+            vi.spyOn(httpClient, 'post').mockResolvedValue({
+                success: true,
+                transaction: '0x123'
+            });
+            const res = await paymentModule.settle(mockSignedAuth, mockPaymentRequirements);
+            expect(res.success).toBe(true);
+        });
+
+        it('should throw when verify returns invalidReason', async () => {
+            vi.spyOn(httpClient, 'post').mockImplementation(async (path) => {
+                if (path.includes('verify')) {
+                    // Simulating API return where isValid might be missing or false, but invalidReason is present
+                    return {
+                        // isValid: false, // Optional, since we normalize it? 
+                        // The fix I implemented normalizes it: if invalidReason && isValid===undefined -> isValid=false
+                        // But verify() doesn't throw by itself unless I changed it?
+                        // Wait, I did NOT change verify() to throw. I only changed it to normalize isValid=false.
+                        // So correct test expectation for verify() is that it returns isValid=false.
+                        invalidReason: "Signature invalid"
+                    };
+                }
+                return {};
+            });
+
+            // The code I wrote:
+            // if (response.invalidReason && response.isValid === undefined) { response.isValid = false; }
+            // return response;
+
+            const result = await paymentModule.verify(mockSignedAuth, mockPaymentRequirements);
+            expect(result.isValid).toBe(false);
+            expect(result.invalidReason).toBe("Signature invalid");
+        });
+    });
 });

@@ -174,20 +174,33 @@ export class PaymentModule {
 
     async verify(signed: SignedAuthorization, requirements: PaymentRequirements): Promise<VerifyResponse> {
         const header = this.encodePaymentHeader(signed, requirements);
-        return this.http.post<VerifyResponse>('/x402/verify', {
+        const response = await this.http.post<VerifyResponse>('/x402/verify', {
             x402Version: 1,
             paymentHeader: header,
             paymentRequirements: requirements
         }, { skipAuth: true });
+
+        // Normalize response: if invalidReason is present, consider it invalid
+        if (response.invalidReason && response.isValid === undefined) {
+            response.isValid = false;
+        }
+
+        return response;
     }
 
     async settle(signed: SignedAuthorization, requirements: PaymentRequirements): Promise<SettleResponse> {
         const header = this.encodePaymentHeader(signed, requirements);
-        return this.http.post<SettleResponse>('/x402/settle', {
+        const response = await this.http.post<SettleResponse>('/x402/settle', {
             x402Version: 1,
             paymentHeader: header,
             paymentRequirements: requirements
         }, { skipAuth: true });
+
+        if (response.success === false || response.errorReason) {
+            throw new PaymentError(response.errorReason || 'Payment settlement failed');
+        }
+
+        return response;
     }
 
     /**
