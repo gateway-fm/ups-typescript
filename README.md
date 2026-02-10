@@ -93,9 +93,8 @@ function PaymentFlow() {
 
 ## Examples
 
-See the [`examples/`](./examples) directory:
+See the **[Examples Overview](./examples/README.md)** for more details.
 
-- **[Basic Node.js](./examples/basic)** — Standalone TypeScript example
 - **[Basic Node.js](./examples/basic)** — Standalone TypeScript example
 - **[React + Vite](./examples/react-app)** — Full React application
 - **[React Invoice](./examples/react-invoice-app)** — Invoice Management application

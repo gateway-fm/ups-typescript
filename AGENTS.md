@@ -473,12 +473,13 @@ pnpm lint -- --fix # Auto-fix where possible
 
 | Dependency | Version | Purpose |
 | :--- | :--- | :--- |
+| `react` | `^19.0.0` | UI Library |
 | `viem` | `^2.21.0` | Ethereum interactions, EIP-712 signing |
-| `zustand` | `^4.5.0` | React state management |
+| `zustand` | `^5.0.10` | React state management |
 | `@tanstack/react-query` | `^5.0.0` | Async state in React |
 | `tsup` | `^8.0.0` | Bundling |
 | `vitest` | `^4.0.18` | Testing |
 
 ---
 
-*Last updated: 2026-02-04*
+*Last updated: 2026-02-10*
