@@ -14,6 +14,11 @@ TypeScript SDK for the [x402 Universal Payments Protocol](https://x402.org) — 
 - 🔄 **Multi-Chain** — TAU, Base, Base Sepolia, and Ethereum Mainnet support
 - 📦 **Dual Build** — ESM and CommonJS compatible
 
+## Documentation
+- [**Architecture & State Machine**](./docs/ARCHITECTURE.md)
+- [**Smart Accounts (FAQ)**](./docs/SMART_ACCOUNTS.md)
+- [**Error Handling**](./docs/ERRORS.md)
+
 ## Installation
 
 ```bash
@@ -183,11 +188,25 @@ pnpm build
 
 Create a `.env` file:
 
-```bash
-API_BASE_URL=https://api.ups.example.com
-BLOCKCHAIN_RPC_URL=https://sepolia.base.org
-BLOCKCHAIN_CHAIN_ID=84532
-```
+### `UPSConfig` Options
+
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `baseUrl` | `string` | **Required** | The UPS Backend API URL. |
+| `network` | `string` | **Required** | The target blockchain network (e.g., `eip155:737998412`). |
+| `timeout` | `number` | `30000` | Request timeout in milliseconds. |
+| `retryAttempts` | `number` | `3` | Number of retries for failed idempotent requests. |
+| `refreshInterval`| `number` | `60000` | Auth token auto-refresh interval (ms). |
+
+> [!WARNING]
+> **Safety Warning**: Ensure your `network` configuration matches the environment you are connecting to (Testnet vs Mainnet). Mismatched configurations can lead to stuck transactions or loss of funds if signed on the wrong chain.
+
+### Infrastructure Interoperability
+
+The SDK is designed to be agnostic of the underlying RPC provider for **signing**, but relies on the UPS Backend for **reading** and **relaying**.
+
+- **Signing**: Uses the standard EIP-1193 provider (e.g., `window.ethereum`) injected by wallets like MetaMask or Coinbase Wallet. You can bring any supported wallet.
+- **Relaying**: All transactions are relayed via the UPS Backend to ensure gas abstraction and x402 protocol compliance. You do not need your own RPC node for transaction submission.
 
 See [`SECRETS.md`](./SECRETS.md) for handling sensitive keys.
 
