@@ -46,7 +46,7 @@
         "test:e2e": "vitest run --config vitest.e2e.config.ts"
     },
     "dependencies": {
-        "viem": "^2.21.0"
+        "viem": "^2.46.2"
     },
     "devDependencies": {
         "dotenv": "^17.2.3",
