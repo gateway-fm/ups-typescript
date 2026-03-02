@@ -16,8 +16,8 @@ export function AccountCreation() {
         try {
             setAuthError(null);
             await authenticate.mutateAsync();
-        } catch (err: unknown) {
-            setAuthError(err.message || 'Authentication failed');
+        } catch (err: any) {
+            setAuthError((err as any).message || 'Authentication failed');
         }
     };
 
@@ -64,10 +64,10 @@ export function AccountCreation() {
                 console.log('No account in response:', result);
                 setCreateLocalError('No account returned from server');
             }
-        } catch (err: unknown) {
+        } catch (err: any) {
             console.error('Failed to create account:', err);
             console.error('Error details:', JSON.stringify(err, null, 2));
-            setCreateLocalError(err.message || 'Failed to create account');
+            setCreateLocalError((err as any).message || 'Failed to create account');
         } finally {
             setIsCreating(false);
         }

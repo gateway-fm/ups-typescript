@@ -27,7 +27,7 @@ export function BalanceProvider({
     const { data: accounts } = useAccounts();
     const [balances, setBalances] = useState<Record<string, string>>({});
     const [balancesLoading, setBalancesLoading] = useState(false);
-    const [_refreshCounter, setRefreshCounter] = useState(0);
+    const [refreshCounter, setRefreshCounter] = useState(0);
 
     // Format balance to 2 decimal places
     const formatBalance = useCallback((value: string): string => {

@@ -20,8 +20,8 @@ export function EscrowDashboard() {
         try {
             const data = await client.escrow.get(escrowId);
             setEscrow(data);
-        } catch (err: unknown) {
-            setError(err.message || 'Failed to fetch escrow');
+        } catch (err: any) {
+            setError((err as any).message || 'Failed to fetch escrow');
         } finally {
             setLoading(false);
         }
@@ -47,8 +47,8 @@ export function EscrowDashboard() {
             }
             // Refresh details
             fetchEscrow();
-        } catch (err: unknown) {
-            setError(err.message || `Failed to ${action}`);
+        } catch (err: any) {
+            setError((err as any).message || `Failed to ${action}`);
         } finally {
             setLoading(false);
         }

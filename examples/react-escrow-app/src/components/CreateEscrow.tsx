@@ -24,7 +24,7 @@ const ESCROW_EVENT_ABI = [
 export function CreateEscrow() {
     const { pay, isPending, error, data } = usePayment();
     const { data: accounts, isLoading: accountsLoading } = useAccounts();
-    const { balances, _balancesLoading, triggerRefresh, decimals, symbol } = useBalances();
+    const { balances, balancesLoading, triggerRefresh, decimals, symbol } = useBalances();
 
     const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
     const [recipient, setRecipient] = useState('');
@@ -33,7 +33,7 @@ export function CreateEscrow() {
     const [releaseDelay, setReleaseDelay] = useState('3600'); // Seconds
     const [createdEscrowId, setCreatedEscrowId] = useState<string | null>(null);
 
-    const _selectedBalance = selectedAccount ? balances[selectedAccount.id] : null;
+    const selectedBalance = selectedAccount ? balances[selectedAccount.id] : null;
 
     useEffect(() => {
         if (accounts && accounts.length > 0 && !selectedAccount) {
@@ -178,7 +178,7 @@ export function CreateEscrow() {
                     {isPending ? 'Creating...' : 'Create Escrow'}
                 </button>
             </div>
-            {error && <p style={{ color: 'red' }}>{error.message}</p>}
+            {error && <p style={{ color: 'red' }}>{(error as any).message}</p>}
         </div>
     );
 }

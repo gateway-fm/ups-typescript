@@ -27,7 +27,7 @@ export function AccountList() {
         setFundSuccess(null);
 
         try {
-            const ethereum = (window as unknown).ethereum;
+            const ethereum = (window as any).ethereum;
             if (!ethereum) {
                 throw new Error('MetaMask not found');
             }
@@ -53,8 +53,8 @@ export function AccountList() {
             // Refresh balances after funding
             setTimeout(() => fetchBalances(), 3000);
 
-        } catch (err: unknown) {
-            setFundError(err.message || 'Failed to fund account');
+        } catch (err: any) {
+            setFundError((err as any).message || 'Failed to fund account');
         } finally {
             setFundingInProgress(false);
         }
