@@ -41,7 +41,7 @@ export function WalletConnect() {
 
     const connect = async () => {
         try {
-            const ethereum = (window as any).ethereum;
+            const ethereum = (window as unknown).ethereum;
             if (!ethereum) {
                 throw new Error('No crypto wallet found. Please install MetaMask.');
             }
@@ -58,7 +58,7 @@ export function WalletConnect() {
             // Connect to UPS SDK
             await client.connect(ethereum);
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             setError(err.message);
         }
     };
@@ -68,7 +68,7 @@ export function WalletConnect() {
             await client.disconnect();
             setLocalAddress(null);
             setBalance(null);
-        } catch (err: any) {
+        } catch (err: unknown) {
             setError(err.message);
         }
     };

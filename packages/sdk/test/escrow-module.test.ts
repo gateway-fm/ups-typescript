@@ -5,7 +5,7 @@ import { Escrow, EscrowActionResponse } from '../src/types';
 
 describe('EscrowModule', () => {
     let escrowModule: EscrowModule;
-    let mockHttp: any;
+    let mockHttp: unknown;
 
     beforeEach(() => {
         mockHttp = {

@@ -29,7 +29,7 @@ export class AccountModule {
     }
 
     async create(params: CreateAccountParams): Promise<CreateAccountResponse> {
-        const response = await this.http.post<any>('/accounts', {
+        const response = await this.http.post<unknown>('/accounts', {
             owner_address: params.ownerAddress,
             salt: params.salt,
         });
@@ -48,9 +48,9 @@ export class AccountModule {
         return response.wallet_address;
     }
 
-    private mapAccount(data: any): Account {
+    private mapAccount(data: unknown): Account {
         // Map snake_case to camelCase
-        const d = data as any;
+        const d = data as unknown;
         return {
             id: d.id,
             ownerAddress: d.owner_address,

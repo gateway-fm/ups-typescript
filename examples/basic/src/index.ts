@@ -1,7 +1,7 @@
 import { UPSClient } from '@gatewayfm/ups-sdk';
-import { createWalletClient, http, hexToBytes, bytesToHex, createPublicClient, defineChain } from 'viem';
+import { createWalletClient, http, _hexToBytes, bytesToHex, createPublicClient, defineChain } from 'viem';
 import { privateKeyToAccount, generatePrivateKey } from 'viem/accounts';
-import { baseSepolia } from 'viem/chains';
+import { _baseSepolia } from 'viem/chains';
 import dotenv from 'dotenv';
 import { createMockProvider } from './mock-provider.js';
 
@@ -18,7 +18,7 @@ const config = {
     network: process.env.NETWORK_ID || 'eip155:737998412',
 };
 
-async function createAccount(role: string): Promise<{ client: UPSClient, account: any }> {
+async function createAccount(role: string): Promise<{ client: UPSClient, account: unknown }> {
     console.log(`\n=== Creating ${role} Account ===`);
 
     const client = new UPSClient(config);
@@ -28,7 +28,7 @@ async function createAccount(role: string): Promise<{ client: UPSClient, account
 
     console.log(`${role} Wallet:`, walletAccount.address);
 
-    await client.connect(provider as any);
+    await client.connect(provider as unknown);
     await client.authenticate();
 
     const salt = generateSalt();
@@ -120,7 +120,7 @@ async function demonstratePayment(buyerSA: string, merchantSA: string, client: U
     }
 }
 
-async function getBalance(address: string, publicClient: any) {
+async function getBalance(address: string, publicClient: unknown) {
     const tokenAddress = process.env.TOKEN_ADDRESS as `0x${string}`;
     const data = `0x70a08231${address.toLowerCase().replace('0x', '').padStart(64, '0')}` as `0x${string}`;
     const balance = await publicClient.call({ to: tokenAddress, data });

@@ -10,7 +10,7 @@ import { useUPSStore } from '../store';
 
 const invoiceKeys = {
     all: ['invoices'] as const,
-    list: (params?: any) => [...invoiceKeys.all, 'list', params] as const,
+    list: (params?: unknown) => [...invoiceKeys.all, 'list', params] as const,
     detail: (id: string) => [...invoiceKeys.all, 'detail', id] as const,
 };
 

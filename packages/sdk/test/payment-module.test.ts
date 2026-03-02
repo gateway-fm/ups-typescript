@@ -26,7 +26,7 @@ describe('PaymentModule', () => {
             signTypedData: vi.fn().mockResolvedValue('0xsignature'),
             getAddress: vi.fn().mockReturnValue('0xsender'),
             isConnected: vi.fn().mockReturnValue(true),
-        } as any;
+        } as unknown;
         paymentModule = new PaymentModule(httpClient, walletModule);
     });
 

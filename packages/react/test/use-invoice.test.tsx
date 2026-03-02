@@ -9,7 +9,7 @@ describe('useInvoice', () => {
             authState: {
                 isAuthenticated: true,
                 token: 'mock-token',
-                expiresAt: new Date(Date.now() + 3600 * 1000).toISOString() as any,
+                expiresAt: new Date(Date.now() + 3600 * 1000).toISOString() as unknown,
                 address: '0x123'
             }
         });

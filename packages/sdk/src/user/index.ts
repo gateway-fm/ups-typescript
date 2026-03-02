@@ -22,8 +22,8 @@ export class UserModule {
         return this.mapUser(response.user);
     }
 
-    private mapUser(data: any): User {
-        const d = data as any;
+    private mapUser(data: unknown): User {
+        const d = data as unknown;
         return {
             id: d.id,
             walletAddress: d.wallet_address,

@@ -18,12 +18,12 @@ describe('B2C Payment Flow', () => {
         // 1. Create buyer client and wallet
         const buyerWallet = createTestWallet();
         const buyerProvider = createProviderFromPrivateKey(buyerWallet.privateKey);
-        buyerClient = new UPSClient({ baseUrl: config.apiBaseUrl, network: config.network as any });
+        buyerClient = new UPSClient({ baseUrl: config.apiBaseUrl, network: config.network as unknown });
 
         // 2. Create merchant client and wallet
         const merchantWallet = createTestWallet();
         const merchantProvider = createProviderFromPrivateKey(merchantWallet.privateKey);
-        merchantClient = new UPSClient({ baseUrl: config.apiBaseUrl, network: config.network as any });
+        merchantClient = new UPSClient({ baseUrl: config.apiBaseUrl, network: config.network as unknown });
 
         // 3. Connect and authenticate both
         await buyerClient.connect(buyerProvider);

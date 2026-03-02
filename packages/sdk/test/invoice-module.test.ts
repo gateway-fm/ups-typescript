@@ -5,7 +5,7 @@ import { CreateInvoiceRequest, InvoiceResponse, InvoiceListResponse } from '../s
 
 describe('InvoiceModule', () => {
     let invoiceModule: InvoiceModule;
-    let mockHttp: any;
+    let mockHttp: unknown;
 
     beforeEach(() => {
         mockHttp = {

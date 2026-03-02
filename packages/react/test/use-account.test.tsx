@@ -10,7 +10,7 @@ describe('useAccounts', () => {
             authState: {
                 isAuthenticated: true,
                 token: 'mock-token',
-                expiresAt: new Date(Date.now() + 3600 * 1000).toISOString() as any, // Cast for mock match
+                expiresAt: new Date(Date.now() + 3600 * 1000).toISOString() as unknown, // Cast for mock match
                 address: '0x123'
             }
         });

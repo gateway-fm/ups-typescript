@@ -52,7 +52,7 @@ export function createProviderFromPrivateKey(privateKey: `0x${string}`) {
 
     // Create an EIP-1193 compatible provider
     return {
-        request: async ({ method, params }: { method: string; params?: any[] }) => {
+        request: async ({ method, params }: { method: string; params?: unknown[] }) => {
             if (method === 'eth_requestAccounts' || method === 'eth_accounts') {
                 return [account.address];
             }
@@ -79,7 +79,7 @@ export function createProviderFromPrivateKey(privateKey: `0x${string}`) {
                     message: data.message,
                 });
             }
-            return client.request({ method: method as any, params: params as any });
+            return client.request({ method: method as unknown, params: params as unknown });
         },
     };
 }

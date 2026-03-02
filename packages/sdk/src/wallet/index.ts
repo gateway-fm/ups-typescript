@@ -116,8 +116,8 @@ export class WalletModule {
             // viem expects exact structure
             return await this.client.signTypedData({
                 account: this._state.address as `0x${string}`,
-                domain: typedData.domain as any,
-                types: typedData.types as any,
+                domain: typedData.domain as unknown,
+                types: typedData.types as unknown,
                 primaryType: typedData.primaryType,
                 message: typedData.message,
             });

@@ -5,7 +5,7 @@ import { EventBus } from '../src/core/event-bus';
 describe('WalletModule', () => {
     let walletModule: WalletModule;
     let eventBus: EventBus;
-    let mockProvider: any;
+    let mockProvider: unknown;
 
     beforeEach(() => {
         eventBus = new EventBus();
@@ -66,7 +66,7 @@ describe('WalletModule', () => {
             primaryType: 'Person',
             message: { name: 'Bob' },
         };
-        const signature = await walletModule.signTypedData(typedData as any);
+        const signature = await walletModule.signTypedData(typedData as unknown);
         expect(signature).toBe('0xtypedsignature');
         expect(mockProvider.request).toHaveBeenCalledWith({
             method: 'eth_signTypedData_v4',
@@ -92,7 +92,7 @@ describe('WalletModule', () => {
     });
 
     it('should handle user rejection (code 4001)', async () => {
-        const rejectionError: any = new Error('User rejected');
+        const rejectionError: unknown = new Error('User rejected');
         rejectionError.code = 4001;
         const errorProvider = {
             request: vi.fn().mockRejectedValue(rejectionError),
@@ -102,8 +102,8 @@ describe('WalletModule', () => {
     });
 
     it('should emit state change on accountsChanged', async () => {
-        const listeners: Record<string, (...args: any[]) => void> = {};
-        mockProvider.on.mockImplementation((event: string, fn: (...args: any[]) => void) => {
+        const listeners: Record<string, (...args: unknown[]) => void> = {};
+        mockProvider.on.mockImplementation((event: string, fn: (...args: unknown[]) => void) => {
             listeners[event] = fn;
         });
 
@@ -119,8 +119,8 @@ describe('WalletModule', () => {
     });
 
     it('should disconnect on empty accountsChanged', async () => {
-        const listeners: Record<string, (...args: any[]) => void> = {};
-        mockProvider.on.mockImplementation((event: string, fn: (...args: any[]) => void) => {
+        const listeners: Record<string, (...args: unknown[]) => void> = {};
+        mockProvider.on.mockImplementation((event: string, fn: (...args: unknown[]) => void) => {
             listeners[event] = fn;
         });
 
@@ -132,8 +132,8 @@ describe('WalletModule', () => {
     });
 
     it('should update chainId on chainChanged', async () => {
-        const listeners: Record<string, (...args: any[]) => void> = {};
-        mockProvider.on.mockImplementation((event: string, fn: (...args: any[]) => void) => {
+        const listeners: Record<string, (...args: unknown[]) => void> = {};
+        mockProvider.on.mockImplementation((event: string, fn: (...args: unknown[]) => void) => {
             listeners[event] = fn;
         });
 

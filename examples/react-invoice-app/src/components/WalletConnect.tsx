@@ -41,7 +41,7 @@ export function WalletConnect() {
 
     const connect = async () => {
         try {
-            const ethereum = (window as any).ethereum;
+            const ethereum = (window as unknown).ethereum;
             if (!ethereum) {
                 throw new Error('No crypto wallet found. Please install MetaMask.');
             }

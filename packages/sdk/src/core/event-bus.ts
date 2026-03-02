@@ -1,4 +1,4 @@
-type Callback<T = any> = (payload: T) => void;
+type Callback<T = unknown> = (payload: T) => void;
 type Unsubscribe = () => void;
 
 export class EventBus {

@@ -89,11 +89,11 @@ describe('UPSClient', () => {
             vi.spyOn(client.wallet, 'getAddress').mockReturnValue('0xAddress');
             vi.spyOn(client.wallet, 'signMessage').mockResolvedValue('0xSignature');
 
-            const notFoundError: any = new Error('User not found');
+            const notFoundError: unknown = new Error('User not found');
             notFoundError.status = 404;
 
             vi.spyOn(client.auth, 'login').mockRejectedValue(notFoundError);
-            vi.spyOn(client.auth, 'register').mockResolvedValue({ token: 't', expiresAt: 'e' } as any);
+            vi.spyOn(client.auth, 'register').mockResolvedValue({ token: 't', expiresAt: 'e' } as unknown);
 
             await client.authenticateLegacy();
             expect(client.auth.login).toHaveBeenCalled();
@@ -104,7 +104,7 @@ describe('UPSClient', () => {
             vi.spyOn(client.wallet, 'isConnected').mockReturnValue(true);
             vi.spyOn(client.wallet, 'getAddress').mockReturnValue('0xAddress');
 
-            const otherError: any = new Error('Server error');
+            const otherError: unknown = new Error('Server error');
             otherError.status = 500;
 
             vi.spyOn(client.wallet, 'signMessage').mockResolvedValue('0xSignature');

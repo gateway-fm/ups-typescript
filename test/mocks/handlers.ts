@@ -176,7 +176,7 @@ export const handlers = [
     }),
 
     http.post('*/invoices', async ({ request }) => {
-        const body = await request.json() as any;
+        const body = await request.json() as unknown;
         return HttpResponse.json({
             invoice: {
                 ...mockInvoice,

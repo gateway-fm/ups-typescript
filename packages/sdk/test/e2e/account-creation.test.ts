@@ -16,7 +16,7 @@ describe('Account Creation Flow', () => {
         // 1. Create SDK client
         client = new UPSClient({
             baseUrl: config.apiBaseUrl,
-            network: config.network as any // Cast if type mismatch
+            network: config.network as unknown // Cast if type mismatch
         });
 
         // 2. Create test wallet
@@ -59,7 +59,7 @@ describe('Account Creation Flow', () => {
         // Setup new wallet for clean state or reuse
         const testWallet = createTestWallet();
         const provider = createProviderFromPrivateKey(testWallet.privateKey);
-        const localClient = new UPSClient({ baseUrl: config.apiBaseUrl, network: config.network as any });
+        const localClient = new UPSClient({ baseUrl: config.apiBaseUrl, network: config.network as unknown });
 
         await localClient.connect(provider);
         await localClient.authenticate();
