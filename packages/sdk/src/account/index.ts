@@ -29,7 +29,7 @@ export class AccountModule {
     }
 
     async create(params: CreateAccountParams): Promise<CreateAccountResponse> {
-        const response = await this.http.post<unknown>('/accounts', {
+        const response = await this.http.post<{ account: unknown; tx_hash: string }>('/accounts', {
             owner_address: params.ownerAddress,
             salt: params.salt,
         });
@@ -50,16 +50,16 @@ export class AccountModule {
 
     private mapAccount(data: unknown): Account {
         // Map snake_case to camelCase
-        const d = data as unknown;
+        const d = data as Record<string, unknown>;
         return {
-            id: d.id,
-            ownerAddress: d.owner_address,
-            walletAddress: d.wallet_address,
-            status: d.status,
-            kycLevel: d.kyc_level ?? 0,
-            userId: d.user_id,
-            createdAt: d.created_at,
-            updatedAt: d.updated_at,
+            id: d.id as string,
+            ownerAddress: d.owner_address as string,
+            walletAddress: d.wallet_address as string,
+            status: d.status as Account['status'],
+            kycLevel: (d.kyc_level as number) ?? 0,
+            userId: d.user_id as string | undefined,
+            createdAt: d.created_at as string,
+            updatedAt: d.updated_at as string | undefined,
         };
     }
 }

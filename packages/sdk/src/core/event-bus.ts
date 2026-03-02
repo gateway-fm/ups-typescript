@@ -21,9 +21,9 @@ export class EventBus {
         if (!this.listeners.has(event)) {
             this.listeners.set(event, new Set());
         }
-        this.listeners.get(event)!.add(callback);
+        this.listeners.get(event)!.add(callback as Callback);
 
-        return () => this.off(event, callback);
+        return () => this.off(event, callback as Callback);
     }
 
     once<T>(event: string, callback: Callback<T>): Unsubscribe {

@@ -23,12 +23,12 @@ export class UserModule {
     }
 
     private mapUser(data: unknown): User {
-        const d = data as unknown;
+        const d = data as Record<string, unknown>;
         return {
-            id: d.id,
-            walletAddress: d.wallet_address,
-            status: d.status,
-            createdAt: d.created_at,
+            id: d.id as string,
+            walletAddress: d.wallet_address as string,
+            status: d.status as User['status'],
+            createdAt: d.created_at as string,
         };
     }
 }

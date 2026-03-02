@@ -92,7 +92,7 @@ export class UPSClient {
             await this.auth.login(address, loginMessage, signature);
         } catch (error: unknown) {
             // If related to "User not found" or 404/401/400, try Register
-            const e = error as unknown; // Cast to any to check specific properties safely
+            const e = error as { status?: number; message?: string; details?: { message?: string } };
             const isAuthError = e.status === 404 || e.status === 401 || e.status === 400 ||
                 e.message?.includes?.('not found') ||
                 e.details?.message?.includes?.('not found');
