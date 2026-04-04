@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "@gatewayfm/ups-sdk": "workspace:*",
-        "viem": "^2.46.3",
+        "viem": "^2.47.10",
         "dotenv": "^17.2.4"
     },
     "devDependencies": {
