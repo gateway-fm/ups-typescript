@@ -34,13 +34,13 @@
         "@gatewayfm/ups-sdk": "workspace:*"
     },
     "peerDependencies": {
-        "react": "^19.2.4",
+        "react": "^19.2.5",
         "@tanstack/react-query": "^5.0.0",
         "@gatewayfm/ups-sdk": "workspace:*"
     },
     "devDependencies": {
-        "react": "^19.2.4",
-        "@types/react": "^19.2.13",
+        "react": "^19.2.5",
+        "@types/react": "^19.2.14",
         "tsup": "^8.0.0",
         "typescript": "^5.5.0"
     }
