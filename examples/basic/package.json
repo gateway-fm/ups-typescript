@@ -9,12 +9,12 @@
     "dependencies": {
         "@gatewayfm/ups-sdk": "workspace:*",
         "viem": "^2.46.3",
-        "dotenv": "^17.2.4"
+        "dotenv": "^17.4.2"
     },
     "devDependencies": {
         "tsx": "^4.15.0",
-        "typescript": "^5.5.0",
-        "@types/node": "^25.2.3"
+        "typescript": "^6.0.3",
+        "@types/node": "^25.6.0"
     },
     "version": "0.0.21"
 }
